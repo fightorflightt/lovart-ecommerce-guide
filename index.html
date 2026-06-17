@@ -1,632 +1,1009 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lovart 电商设计实战教程</title>
-  <style>
-    :root {
-      --bg: #f7f2ea;
-      --paper: #fffaf3;
-      --ink: #241f1b;
-      --muted: #6f6258;
-      --line: #e2d6c8;
-      --accent: #c75f3a;
-      --accent-2: #8f3f1f;
-      --soft: #f8e6da;
-      --soft-2: #fff0d6;
-      --code: #2b211b;
-      --code-bg: #f5ebe2;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", Arial, sans-serif;
-      color: var(--ink);
-      background: var(--bg);
-      line-height: 1.75;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .layout {
-      display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-      min-height: 100vh;
-    }
-    aside {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: auto;
-      padding: 28px 22px;
-      border-right: 1px solid var(--line);
-      background: #fbf4ea;
-    }
-    aside h2 {
-      margin: 0 0 12px;
-      font-size: 18px;
-      line-height: 1.3;
-    }
-    aside p {
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    nav a {
-      display: block;
-      padding: 8px 10px;
-      border-radius: 8px;
-      color: #2f363d;
-      font-size: 14px;
-    }
-    nav a:hover {
-      background: var(--soft);
-      text-decoration: none;
-    }
-    main {
-      max-width: 1160px;
-      padding: 44px 48px 80px;
-    }
-    .hero {
-      padding: 42px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: linear-gradient(135deg, #fffaf3 0%, #f8e6da 52%, #fff0d6 100%);
-    }
-    .eyebrow {
-      margin: 0 0 8px;
-      color: var(--accent);
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-size: 12px;
-    }
-    h1 {
-      margin: 0 0 14px;
-      max-width: 880px;
-      font-size: 42px;
-      line-height: 1.18;
-      letter-spacing: 0;
-    }
-    .lead {
-      max-width: 880px;
-      margin: 0;
-      color: #4d4037;
-      font-size: 18px;
-    }
-    section {
-      margin-top: 42px;
-      padding: 34px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--paper);
-    }
-    h2 {
-      margin: 0 0 18px;
-      font-size: 28px;
-      line-height: 1.25;
-    }
-    h3 {
-      margin: 28px 0 10px;
-      font-size: 20px;
-      line-height: 1.35;
-    }
-    h4 {
-      margin: 18px 0 8px;
-      font-size: 16px;
-    }
-    p { margin: 10px 0; }
-    ul, ol { padding-left: 22px; }
-    li { margin: 6px 0; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    .card {
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fff;
-    }
-    .note {
-      padding: 16px 18px;
-      border-left: 4px solid var(--accent);
-      background: var(--soft);
-      border-radius: 8px;
-    }
-    .warn {
-      padding: 16px 18px;
-      border-left: 4px solid var(--accent-2);
-      background: var(--soft-2);
-      border-radius: 8px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0;
-      background: #fff;
-      font-size: 14px;
-    }
-    th, td {
-      border: 1px solid var(--line);
-      padding: 10px 12px;
-      vertical-align: top;
-      text-align: left;
-    }
-    th { background: #f3e8dc; }
-    .prompt {
-      position: relative;
-      margin: 12px 0 18px;
-      padding: 16px;
-      border: 1px solid #dbcabb;
-      border-radius: 10px;
-      background: var(--code-bg);
-      color: var(--code);
-      white-space: pre-wrap;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-      font-size: 13px;
-      line-height: 1.65;
-    }
-    .copy {
-      float: right;
-      margin-left: 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fff;
-      color: var(--accent);
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .tag {
-      display: inline-block;
-      margin: 0 6px 6px 0;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: var(--soft);
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .small { color: var(--muted); font-size: 13px; }
-    .checklist li { list-style: "□  "; }
-    footer {
-      margin-top: 42px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    @media (max-width: 920px) {
-      .layout { grid-template-columns: 1fr; }
-      aside { position: static; height: auto; }
-      main { padding: 24px 18px 56px; }
-      .hero, section { padding: 24px; }
-      h1 { font-size: 32px; }
-      .grid, .grid-3 { grid-template-columns: 1fr; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lovart 电商设计实战教程</title>
+<style>
+  :root{
+    --bg:#f7f6f3; --card:#ffffff; --ink:#1f2328; --sub:#5b6470;
+    --line:#e7e3db; --accent:#ff6a3d; --accent2:#ff8c42; --soft:#fff3ec;
+    --green:#1f9d6b; --softgreen:#eaf7f1; --blue:#2f6fed; --softblue:#eef3ff;
+    --warn:#c9821a; --softwarn:#fff6e6; --code:#2b2f36; --codeink:#e8e6e0;
+    --radius:14px; --maxw:880px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{display:flex;max-width:1240px;margin:0 auto;gap:32px;padding:0 20px}
+  /* 侧边目录 */
+  nav.toc{position:sticky;top:0;align-self:flex-start;height:100vh;overflow-y:auto;
+    width:248px;flex:0 0 248px;padding:28px 8px 40px 0;font-size:14px}
+  nav.toc h4{font-size:12px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;margin:0 0 10px}
+  nav.toc a{display:block;color:var(--sub);text-decoration:none;padding:5px 10px;border-radius:8px;border-left:2px solid transparent}
+  nav.toc a:hover{background:var(--soft);color:var(--accent)}
+  nav.toc a.sub{padding-left:22px;font-size:13px;color:#8a929d}
+  main{flex:1 1 auto;min-width:0;max-width:var(--maxw);padding:36px 0 120px}
+  /* 头部 */
+  header.hero{background:linear-gradient(135deg,#ff6a3d,#ff9a5a);color:#fff;border-radius:20px;
+    padding:40px 38px;margin-bottom:14px;box-shadow:0 12px 30px rgba(255,106,61,.18)}
+  header.hero .tag{display:inline-block;background:rgba(255,255,255,.22);padding:4px 12px;border-radius:30px;font-size:13px;margin-bottom:14px}
+  header.hero h1{margin:0 0 10px;font-size:30px;line-height:1.3}
+  header.hero p{margin:0;font-size:15px;opacity:.95}
+  .meta-note{font-size:13px;color:var(--sub);background:var(--softwarn);border:1px solid #f0e2c4;
+    border-radius:12px;padding:12px 16px;margin:14px 0 30px}
+  h2.sec{font-size:24px;margin:54px 0 6px;padding-top:10px;display:flex;align-items:center;gap:12px}
+  h2.sec .n{background:var(--accent);color:#fff;width:34px;height:34px;border-radius:10px;
+    display:inline-flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 34px}
+  h2.sec + .lead{color:var(--sub);margin:6px 0 18px;font-size:15px}
+  h3{font-size:19px;margin:34px 0 10px;padding-left:12px;border-left:4px solid var(--accent)}
+  h4{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  ul,ol{margin:10px 0;padding-left:22px}
+  li{margin:6px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;margin:16px 0;box-shadow:0 2px 10px rgba(20,20,20,.03)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;background:var(--card);border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--soft);color:#9a3a1a;font-weight:600;font-size:13px}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;background:var(--soft);color:#9a3a1a;margin:2px 4px 2px 0}
+  .pill.g{background:var(--softgreen);color:var(--green)}
+  .pill.b{background:var(--softblue);color:var(--blue)}
+  /* 提示框 */
+  .callout{border-radius:12px;padding:14px 18px;margin:16px 0;font-size:14.5px;border:1px solid}
+  .callout.tip{background:var(--softgreen);border-color:#cdeede}
+  .callout.warn{background:var(--softwarn);border-color:#f0e2c4}
+  .callout.info{background:var(--softblue);border-color:#d6e2ff}
+  .callout b{color:var(--ink)}
+  /* 提示词复制块 */
+  .prompt{background:var(--code);border-radius:12px;margin:12px 0;overflow:hidden;border:1px solid #3a3f47}
+  .prompt .bar{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:#22262c;border-bottom:1px solid #3a3f47}
+  .prompt .bar span{color:#aab2bd;font-size:12.5px;letter-spacing:.5px}
+  .prompt .bar button{background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 14px;font-size:12.5px;cursor:pointer;transition:.15s}
+  .prompt .bar button:hover{background:#e85428}
+  .prompt .bar button.done{background:var(--green)}
+  .prompt pre{margin:0;padding:16px 18px;color:var(--codeink);font-size:13.5px;line-height:1.7;white-space:pre-wrap;word-break:break-word;
+    font-family:"SF Mono",Consolas,"PingFang SC",monospace}
+  /* 案例卡 */
+  .case{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:22px 0;background:var(--card)}
+  .case .top{padding:18px 22px;background:linear-gradient(135deg,#fff3ec,#ffe8dc);border-bottom:1px solid var(--line)}
+  .case .top h3{border:none;padding:0;margin:0;font-size:18px}
+  .case .top .who{color:var(--sub);font-size:13.5px;margin-top:4px}
+  .case .body{padding:6px 22px 20px}
+  .step{counter-reset:none}
+  .stepnum{display:inline-flex;width:24px;height:24px;background:var(--accent);color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:13px;margin-right:8px;flex:0 0 24px}
+  .checklist{list-style:none;padding-left:0}
+  .checklist li{padding-left:30px;position:relative;margin:9px 0}
+  .checklist li:before{content:"☐";position:absolute;left:0;top:0;color:var(--accent);font-size:18px}
+  .src{font-size:13px;color:var(--sub)}
+  .src a{color:var(--blue);text-decoration:none}
+  .src a:hover{text-decoration:underline}
+  .back{display:inline-block;margin-top:8px;font-size:13px;color:var(--accent);text-decoration:none}
+  footer{border-top:1px solid var(--line);margin-top:60px;padding-top:24px;color:var(--sub);font-size:13.5px}
+  .kbd{background:#eee;border:1px solid #ccc;border-radius:5px;padding:1px 7px;font-size:13px;font-family:monospace}
+  .toc-toggle{display:none}
+  @media(max-width:980px){
+    nav.toc{display:none}
+    .wrap{display:block}
+    main{max-width:100%;padding:24px 0 80px}
+  }
+</style>
 </head>
 <body>
-  <div class="layout">
-    <aside>
-      <h2>Lovart 电商设计教程</h2>
-      <p>面向电商运营、产品经理、设计助理和独立卖家。先看业务场景，再看工具概念，最后落到操作和提示词。</p>
-      <nav>
-        <a href="#quick-start">快速结论</a>
-        <a href="#what">Lovart 是什么</a>
-        <a href="#workflow">核心工作方式</a>
-        <a href="#map">电商设计地图</a>
-        <a href="#scenes">核心场景教程</a>
-        <a href="#prompts">Prompt 写法</a>
-        <a href="#cases">完整案例</a>
-        <a href="#tips">技巧与避坑</a>
-        <a href="#checklist">检查清单</a>
-        <a href="#sources">资料来源</a>
-      </nav>
-    </aside>
+<div class="wrap">
+<nav class="toc">
+  <h4>目录导航</h4>
+  <a href="#s0">阅读说明 / 资料来源</a>
+  <a href="#s1">一、Lovart 是什么</a>
+  <a href="#s2">二、核心工作方式</a>
+  <a href="#s3">三、电商设计使用地图</a>
+  <a href="#s4">四、核心场景教程</a>
+  <a class="sub" href="#s4-1">① 商品主图</a>
+  <a class="sub" href="#s4-2">② 商品场景图</a>
+  <a class="sub" href="#s4-3">③ 促销 Banner</a>
+  <a class="sub" href="#s4-4">④ 社媒广告图</a>
+  <a class="sub" href="#s4-5">⑤ 详情页模块</a>
+  <a class="sub" href="#s4-6">⑥ 品牌视觉套系</a>
+  <a class="sub" href="#s4-7">⑦ 节日大促物料</a>
+  <a class="sub" href="#s4-8">⑧ 多平台尺寸改版</a>
+  <a href="#s5">五、电商 Prompt 写法</a>
+  <a href="#s6">六、完整案例（3个）</a>
+  <a href="#s7">七、技巧与避坑</a>
+  <a href="#s8">八、实战检查清单</a>
+  <a href="#sjp">九、日本亚马逊主图 & A+</a>
+  <a class="sub" href="#jp1">红线对照表</a>
+  <a class="sub" href="#jp2">主图合规做法</a>
+  <a class="sub" href="#jp3">附图/卖点图</a>
+  <a class="sub" href="#jp4">A+ 内容</a>
+  <a class="sub" href="#jp5">日文乱码 & 日系审美</a>
+  <a class="sub" href="#jp6">完整 3C 案例</a>
+  <a href="#s9">十、附录：尺寸 & 来源</a>
+</nav>
+<main>
+  <header class="hero">
+    <span class="tag">电商运营手册 · 中文实战版</span>
+    <h1>Lovart 电商设计实战教程</h1>
+    <p>给产品经理、电商运营、设计师助理、新手创业者看的一份「能照着做」的指南</p>
+  </header>
 
-    <main>
-      <div class="hero">
-        <p class="eyebrow">Lovart for E-commerce Design</p>
-        <h1>Lovart 电商设计实战教程：从商品图到促销物料的一套可复用工作流</h1>
-        <p class="lead">这份教程把 Lovart 官方 Docs、官方电商相关文章和公开使用经验，整理成电商设计可执行方法。重点不是“怎么生成一张好看的图”，而是怎么稳定地产出能上架、能投放、能复用的一组视觉资产。</p>
-      </div>
-
-      <section id="quick-start">
-        <h2>快速结论</h2>
-        <div class="note">
-          <p><strong>Lovart 最适合的电商任务：</strong>商品主图、场景图、商品卖点图、广告图、促销 Banner、品牌视觉套系、A+ / 详情页模块、包装 Mockup、多尺寸改版。</p>
-          <p><strong>使用方式：</strong>把它当成“会追问的 AI 设计师”，而不是单纯的 AI 画图工具。你给目标、商品素材、品牌规范和参考图，它帮你生成、编辑、扩展、换背景、做 Mockup、导出。</p>
-        </div>
-        <table>
-          <tr><th>你要解决的业务问题</th><th>Lovart 里对应的动作</th><th>电商结果</th></tr>
-          <tr><td>新品上架缺图</td><td>上传商品图，用 E-Commerce Skill 或 Image Generator 生成主图、场景图、卖点图</td><td>一套商品页图片</td></tr>
-          <tr><td>广告素材迭代慢</td><td>用 Brand Kit + Fast Mode 生成多版广告创意，再用 Touch Edit 局部改</td><td>多平台广告图和 A/B 版本</td></tr>
-          <tr><td>大促物料尺寸太多</td><td>用 Expand、Crop、Frame 做不同尺寸适配</td><td>首页 Banner、社媒图、邮件头图、落地页首屏</td></tr>
-          <tr><td>品牌风格不统一</td><td>先建 Brand Kit，把 Logo、颜色、字体、设计规则存进去</td><td>多 SKU 看起来像同一个品牌</td></tr>
-        </table>
-      </section>
-
-      <section id="what">
-        <h2>一、Lovart 是什么</h2>
-        <h3>1. 用产品经理能听懂的话解释</h3>
-        <p>Lovart 是一个 AI 设计智能体。普通设计工具像“工具箱”，你需要自己知道用哪把工具、怎么排版、怎么修图。Lovart 更像“设计执行同事”：你说明业务目标，它自动选择模型、生成素材、放到画布上，再支持你用自然语言继续修改。</p>
-        <p>举个电商例子：你不是只输入“生成一张护肤品海报”，而是告诉它“这是一个敏感肌修护精华，新品首发，要做小红书风格社媒广告，强调温和、屏障修护、首单 8 折，品牌色是薄荷绿和米白，商品瓶身不能变形”。Lovart 会围绕这个目标产出设计。</p>
-
-        <h3>2. 它和普通 AI 画图、Canva、Figma、Midjourney 的区别</h3>
-        <table>
-          <tr><th>工具类型</th><th>像什么</th><th>适合</th><th>不适合</th></tr>
-          <tr><td>Lovart</td><td>AI 设计师 + 画布 + 编辑器</td><td>从 Brief 到多张电商资产的一体化流程</td><td>需要严格像素级人工排版的最终精修</td></tr>
-          <tr><td>Midjourney / 普通画图工具</td><td>视觉灵感生成器</td><td>风格探索、氛围图、概念图</td><td>多素材管理、商品真实性、局部编辑闭环</td></tr>
-          <tr><td>Canva</td><td>模板化排版工具</td><td>套模板、快速排版、轻量运营图</td><td>从零生成原创商品场景和多轮 AI 编辑</td></tr>
-          <tr><td>Figma</td><td>专业协作设计工具</td><td>精细排版、设计系统、页面交付</td><td>自动生成商品摄影和广告创意</td></tr>
-        </table>
-
-        <h3>3. 适合与不适合</h3>
-        <div class="grid">
-          <div class="card">
-            <h4>适合</h4>
-            <ul>
-              <li>需要快速做 5-20 个广告图方向。</li>
-              <li>需要把一个商品图换成多个生活方式场景。</li>
-              <li>需要给多个 SKU 做统一风格的商品图。</li>
-              <li>需要先生成可讨论的视觉方向，再进 Figma / PS 精修。</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h4>不适合直接替代</h4>
-            <ul>
-              <li>涉及法律强合规的商品说明图，必须人工复核。</li>
-              <li>需要 100% 还原实物细节、材质、颜色的最终商用图。</li>
-              <li>中文长文案密集排版，仍建议后续在 Figma / PS / Canva 复排。</li>
-              <li>平台规则变化频繁，最终尺寸和规范要以平台后台为准。</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="workflow">
-        <h2>二、Lovart 的核心工作方式</h2>
-        <h3>1. 基本工作流</h3>
-        <ol>
-          <li><strong>准备：</strong>上传商品图、Logo、品牌色、字体、参考图、竞品截图、卖点文案。</li>
-          <li><strong>选择入口：</strong>常见任务先用 Skills；明确知道要什么图时用 Image Generator；复杂项目用 Thinking Mode。</li>
-          <li><strong>生成首版：</strong>先要 3-5 个方向，不要第一版就追求最终稿。</li>
-          <li><strong>局部修改：</strong>用 Touch Edit / Mark 点选局部，用 Quick Edit 快速换背景、改颜色、调光影。</li>
-          <li><strong>结构调整：</strong>用 Edit Elements 拆层移动，用 Text / Edit Text 改文字，用 Frame 组织多尺寸画板。</li>
-          <li><strong>适配导出：</strong>用 Expand 改比例，用 Crop 裁切，用 Upscale 放大，用 PNG / JPG / PSD / PPTX / SVG 等格式导出。</li>
-        </ol>
-
-        <h3>2. 关键概念</h3>
-        <div class="grid-3">
-          <div class="card">
-            <h4>Canvas 画布</h4>
-            <p>像一张无限白板。你可以把主图、Banner、社媒图、竞品参考、修改版本都放在一起对比。</p>
-          </div>
-          <div class="card">
-            <h4>Skills 技能</h4>
-            <p>像预设好的工作流。电商任务优先找 E-Commerce、Marketing、Social Media、Branding 类 Skill。</p>
-          </div>
-          <div class="card">
-            <h4>Brand Kit 品牌包</h4>
-            <p>存 Logo、颜色、字体、设计规则。适合多 SKU、多活动、多平台保持一致。</p>
-          </div>
-          <div class="card">
-            <h4>@ Mention</h4>
-            <p>在输入框用 @ 指定品牌包、画布元素或模型，优先级高于普通偏好。</p>
-          </div>
-          <div class="card">
-            <h4>Thinking / Fast Mode</h4>
-            <p>Thinking 适合复杂品牌和整套活动；Fast 适合先快速出多个方向。</p>
-          </div>
-          <div class="card">
-            <h4>References 参考素材</h4>
-            <p>上传图片、视频、PDF，或给公共链接，让 Lovart 理解风格、商品、竞品和页面结构。</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="map">
-        <h2>三、电商设计使用地图</h2>
-        <table>
-          <tr><th>阶段</th><th>你要准备什么</th><th>Lovart 操作</th><th>产出物</th></tr>
-          <tr><td>1. 准备阶段</td><td>商品名称、目标人群、平台、活动主题、价格机制</td><td>用文字写成 Brief</td><td>清晰设计目标</td></tr>
-          <tr><td>2. 商品素材整理</td><td>白底图、实拍图、多角度图、包装图、Logo</td><td>Upload Files 或 Add to Canvas</td><td>可被引用的素材库</td></tr>
-          <tr><td>3. 风格设定</td><td>品牌色、字体、竞品、参考图</td><td>建立 Brand Kit；@ 引用参考</td><td>统一视觉规则</td></tr>
-          <tr><td>4. 生成首版</td><td>一个明确任务</td><td>Skill / Agent / Image Generator</td><td>3-5 个方向</td></tr>
-          <tr><td>5. 多轮修改</td><td>选中最接近的一版</td><td>Touch Edit、Quick Edit、Edit Elements</td><td>可用设计稿</td></tr>
-          <tr><td>6. 多尺寸适配</td><td>平台尺寸清单</td><td>Frame、Expand、Crop</td><td>主图、Banner、社媒、广告尺寸</td></tr>
-          <tr><td>7. 导出与复用</td><td>命名规则和渠道</td><td>Generated Files、Export</td><td>PNG/JPG/PSD/SVG/PPTX/MP4</td></tr>
-          <tr><td>8. 资产沉淀</td><td>成功提示词、样式、模板</td><td>保存 Custom Skill 或更新 Brand Kit</td><td>下一次更快复用</td></tr>
-        </table>
-      </section>
-
-      <section id="scenes">
-        <h2>四、核心场景教程</h2>
-
-        <h3>场景 1：商品主图</h3>
-        <p><span class="tag">业务目标</span>让用户在搜索结果页一眼看清商品，并建立真实可信感。</p>
-        <p><strong>准备材料：</strong>高清商品图、平台规范、商品尺寸/颜色、是否允许道具、是否必须白底。</p>
-        <ol>
-          <li>上传真实商品图，优先用正面、清晰、无遮挡素材。</li>
-          <li>如果是平台主图，提示词里明确“不要改变商品结构、Logo、颜色、包装信息”。</li>
-          <li>用 Remove BG 去背景，必要时生成纯白背景或浅灰背景。</li>
-          <li>用 Crop 控制商品占画面比例；用 Upscale 输出高清版本。</li>
-        </ol>
-        <button class="copy" data-copy="p1">复制中文提示词</button>
-        <div class="prompt" id="p1">请基于我上传的真实商品图，生成一张电商平台商品主图。要求：纯白背景，商品居中，商品占画面约 80%-85%，保留真实外观、Logo、包装文字、颜色和结构，不添加人物、道具、水印、促销文案或额外图标。光线干净、边缘清晰、适合商品列表页展示。输出 1:1 方图。</div>
-        <button class="copy" data-copy="p1en">Copy English prompt</button>
-        <div class="prompt" id="p1en">Create an e-commerce main product image based on my uploaded real product photo. Use a pure white background, center the product, keep the product filling about 80%-85% of the frame, and preserve the exact product shape, logo, packaging text, colors, and structure. Do not add people, props, watermarks, promotional text, or extra icons. Clean lighting, sharp edges, suitable for a marketplace listing. Output in 1:1 square format.</div>
-
-        <h3>场景 2：商品场景图 / 生活方式图</h3>
-        <p><span class="tag">业务目标</span>让用户想象“我用它会是什么样”，提升点击和停留。</p>
-        <ol>
-          <li>上传商品图和目标人群描述。</li>
-          <li>先生成 3 个场景方向：家庭、户外、办公、旅行、节日等。</li>
-          <li>选择最贴近品牌的一版，用 Touch Edit 调整背景、光影、道具。</li>
-          <li>对需要多角度展示的商品，尝试 Multi-Angles，但最终要人工确认商品结构是否被改动。</li>
-        </ol>
-        <button class="copy" data-copy="p2">复制中文提示词</button>
-        <div class="prompt" id="p2">请把我上传的商品放入一个真实、有购买欲的生活方式场景中。商品必须保持真实外观和比例，不要改变瓶身/包装/Logo。目标用户是 [目标人群]，使用场景是 [场景]。视觉风格：[如高级、清爽、温暖、科技感]。构图要求：商品是视觉中心，背景辅助表达卖点，不要喧宾夺主。输出 4:5 竖版图片，适合小红书/Instagram 商品种草。</div>
-
-        <h3>场景 3：促销 Banner</h3>
-        <p><span class="tag">业务目标</span>在首页、活动页或店铺头图里快速表达优惠、品类和行动按钮。</p>
-        <ol>
-          <li>先明确活动：新品首发、限时折扣、满减、节日礼赠。</li>
-          <li>用 Frame 建立目标尺寸，例如 1920×600、1200×400、1000×163。</li>
-          <li>生成首版时要求保留文案区域，避免文字压在商品关键部位。</li>
-          <li>中文促销文案较长时，建议 Lovart 先做视觉版，再在 Figma / Canva 精排文字。</li>
-        </ol>
-        <button class="copy" data-copy="p3">复制中文提示词</button>
-        <div class="prompt" id="p3">为 [品牌名] 的 [商品/品类] 设计一张电商促销 Banner。活动主题：[活动主题]。主标题：[主标题]，副标题：[副标题]，行动按钮文案：[按钮文案]。视觉风格：[品牌风格]，使用品牌色 [颜色]。构图：左侧/中间展示商品，右侧保留清晰文案区；层级清楚，适合快速扫读。不要改变商品外观，不要生成多余 Logo。尺寸：[填写尺寸，如 1920x600]。</div>
-
-        <h3>场景 4：社媒广告图</h3>
-        <p><span class="tag">业务目标</span>让用户在信息流里停下来，并在 1-2 秒内知道“卖什么、为什么值得点”。</p>
-        <ol>
-          <li>先要求 4 个不同创意方向：痛点型、利益型、场景型、对比型。</li>
-          <li>每个方向保持同一个 Brand Kit，便于 A/B 测试。</li>
-          <li>用 Fast Mode 快速出变化；确定方向后再用 Thinking Mode 做精修逻辑。</li>
-        </ol>
-        <button class="copy" data-copy="p4">复制中文提示词</button>
-        <div class="prompt" id="p4">请为 [商品名] 生成 4 张社媒广告图，用于 [平台，如 Facebook/Instagram/小红书/TikTok 封面]。目标用户：[目标人群]。核心卖点：[卖点]。请分别做：痛点型、利益型、生活方式型、限时优惠型。每张图都要保留商品真实外观，使用品牌色，文案少而有冲击力。输出尺寸：[1080x1080 或 1080x1920]。</div>
-
-        <h3>场景 5：商品详情页模块 / A+ 内容</h3>
-        <p><span class="tag">业务目标</span>不是“好看”，而是把用户购买前的疑问逐个讲清楚。</p>
-        <table>
-          <tr><th>模块</th><th>作用</th><th>适合内容</th></tr>
-          <tr><td>首屏价值图</td><td>说明这是啥、核心价值是什么</td><td>商品 + 主卖点 + 使用场景</td></tr>
-          <tr><td>功能拆解图</td><td>解释为什么好用</td><td>3-5 个功能点、局部放大</td></tr>
-          <tr><td>材质/工艺图</td><td>建立品质信任</td><td>材质纹理、结构剖面、质感特写</td></tr>
-          <tr><td>对比图</td><td>降低选择成本</td><td>旧款 vs 新款、竞品 vs 自家</td></tr>
-          <tr><td>场景故事图</td><td>让用户代入生活</td><td>家庭、办公、旅行、节日礼赠</td></tr>
-        </table>
-        <button class="copy" data-copy="p5">复制中文提示词</button>
-        <div class="prompt" id="p5">请为 [商品名] 设计一组电商详情页视觉模块，共 5 张。目标是解释商品卖点并提升购买信任。模块包括：1）首屏价值图，2）核心功能拆解图，3）材质/工艺特写图，4）使用场景图，5）对比/规格说明图。请保持品牌风格统一，商品外观真实，不夸大功效。每张图请预留中文标题和短文案位置，尺寸 [例如 970x600 或 750x1000]。</div>
-
-        <h3>场景 6：品牌视觉套系</h3>
-        <p><span class="tag">业务目标</span>新品或新店铺需要一套统一视觉，而不是每张图各自为战。</p>
-        <ol>
-          <li>先建 Brand Kit：Logo、品牌色、字体倾向、摄影风格、构图规则、禁用项。</li>
-          <li>要求 Lovart 生成“主图、场景图、Banner、社媒图、详情页模块”一套。</li>
-          <li>选中最稳定的一套，把成功提示词保存为 Custom Skill。</li>
-        </ol>
-        <button class="copy" data-copy="p6">复制中文提示词</button>
-        <div class="prompt" id="p6">请基于 @我的Brand Kit，为 [品牌名] 的 [商品系列] 创建一套电商视觉系统。需要包含：商品主图风格、生活方式场景图风格、促销 Banner 风格、社媒广告图风格、详情页模块风格。请输出 3 个视觉方向，每个方向说明适合的人群、色彩、构图、字体气质和可复用规则。</div>
-
-        <h3>场景 7：节日大促物料</h3>
-        <p><span class="tag">业务目标</span>短时间内覆盖多个渠道，同时保持活动主视觉一致。</p>
-        <button class="copy" data-copy="p7">复制中文提示词</button>
-        <div class="prompt" id="p7">为 [品牌名] 的 [节日/大促，如 618、双 11、黑五、圣诞、新年] 设计一套电商活动视觉。活动机制：[折扣/满减/赠品]。目标商品：[商品列表]。请生成：首页主 Banner、商品集合页头图、3 张社媒预热图、1 张倒计时图、1 张邮件头图。整体风格统一，突出节日氛围但不要遮挡商品。请给出每张图的推荐尺寸和文案层级。</div>
-
-        <h3>场景 8：多平台尺寸改版</h3>
-        <p><span class="tag">业务目标</span>同一个创意适配不同平台，不重复从零设计。</p>
-        <table>
-          <tr><th>渠道</th><th>常用尺寸参考</th><th>注意</th></tr>
-          <tr><td>商品主图</td><td>1:1，如 1000×1000、1500×1500</td><td>以平台最新规范为准，避免多余文字和道具</td></tr>
-          <tr><td>社媒 Feed</td><td>1080×1080、1080×1350</td><td>中心信息清晰，标题不要太小</td></tr>
-          <tr><td>Story / Reels 封面</td><td>1080×1920</td><td>上下留安全区，避免按钮遮挡</td></tr>
-          <tr><td>店铺 Banner</td><td>1920×600、1200×400、1000×163</td><td>横向留白足够，商品和文案分区</td></tr>
-          <tr><td>Amazon A+ 标准模块</td><td>常见 970×300、970×600</td><td>需要按 Seller Central 最新要求复核</td></tr>
-        </table>
-      </section>
-
-      <section id="prompts">
-        <h2>五、Lovart 电商 Prompt 写法</h2>
-        <div class="note">
-          <p><strong>稳定公式：</strong>角色 + 商品 + 目标用户 + 使用场景 + 视觉风格 + 构图 + 文案 + 尺寸 + 限制条件。</p>
-          <p>生活类比：不要只对设计师说“帮我做张好看的图”。你要告诉他“卖给谁、放在哪、强调什么、不能改什么”。</p>
-        </div>
-
-        <h3>基础模板</h3>
-        <button class="copy" data-copy="base">复制</button>
-        <div class="prompt" id="base">你是一名电商视觉设计师。请为 [商品名] 设计 [物料类型]。目标用户是 [人群]，使用场景是 [平台/页面]。核心卖点是 [卖点]。视觉风格为 [风格]，品牌色为 [颜色]。构图要求：[主体位置、文案位置、留白]。文案包括：[标题/副标题/按钮]。尺寸：[尺寸]。限制：保持商品真实外观，不要改变 Logo、包装、颜色和结构，不要添加未提供的认证/功效/价格信息。</div>
-
-        <h3>高级模板</h3>
-        <button class="copy" data-copy="advanced">复制</button>
-        <div class="prompt" id="advanced">请先根据我上传的商品图、Brand Kit 和参考图，提出 3 个电商视觉方向。每个方向包含：目标人群、核心情绪、色彩方案、构图逻辑、适合渠道、风险点。等我选择方向后，再基于选中的方向生成一组完整物料：主图、场景图、卖点图、促销 Banner、社媒广告图。所有输出必须保持商品真实性和品牌一致性。</div>
-
-        <h3>多轮修改模板</h3>
-        <button class="copy" data-copy="revise">复制</button>
-        <div class="prompt" id="revise">请只修改我选中的这张图的 [局部区域/元素]，其他部分保持不变。修改要求：[具体变化]。不要改变商品主体、Logo、包装文字、品牌色和画面比例。请生成 3 个微调版本，分别偏 [方向A]、[方向B]、[方向C]。</div>
-
-        <h3>反向约束模板</h3>
-        <button class="copy" data-copy="negative">复制</button>
-        <div class="prompt" id="negative">限制条件：不要改变商品结构；不要改变瓶身/包装/Logo；不要虚构认证、奖项、功效和价格；不要生成错误中文；不要让文字压住商品；不要添加水印；不要把商品比例拉伸；不要生成与品牌调性冲突的背景；不要让人物手部遮挡商品关键卖点。</div>
-      </section>
-
-      <section id="cases">
-        <h2>六、完整案例</h2>
-
-        <div class="card">
-          <h3>案例 1：美妆护肤品</h3>
-          <p><strong>设计目标：</strong>为敏感肌修护精华做新品首发视觉。</p>
-          <p><strong>品牌设定：</strong>温和、可信、轻医研；品牌色薄荷绿、米白、浅银。</p>
-          <button class="copy" data-copy="case1">复制首轮提示词</button>
-          <div class="prompt" id="case1">请为一款敏感肌屏障修护精华设计新品首发电商视觉。目标用户是 25-35 岁敏感肌女性，场景是小红书种草和品牌官网。请基于我上传的商品瓶身图，生成 3 个视觉方向：轻医研、自然温和、高级极简。每个方向包含商品主图、生活方式场景图、卖点信息图和社媒广告图建议。限制：不要夸大功效，不要改变瓶身、Logo 和包装文字。</div>
-          <p><strong>修改提示词：</strong>“选择轻医研方向。请把背景改成更干净的实验室台面感，增加柔和自然光，减少装饰道具。标题区留在右上角，商品仍居中偏左。”</p>
-          <p><strong>多尺寸适配：</strong>1:1 商品主图、4:5 小红书图、1080×1920 Story、1920×600 官网 Banner。</p>
-        </div>
-
-        <div class="card">
-          <h3>案例 2：3C 数码产品</h3>
-          <p><strong>设计目标：</strong>为无线降噪耳机制作主图、卖点图和黑五广告。</p>
-          <p><strong>品牌设定：</strong>科技、速度、冷静、高性能；主色黑、银、电子蓝。</p>
-          <button class="copy" data-copy="case2">复制首轮提示词</button>
-          <div class="prompt" id="case2">请基于我上传的无线降噪耳机商品图，设计一套电商视觉。目标用户是通勤白领和游戏用户。核心卖点：主动降噪、低延迟、长续航、舒适佩戴。请输出：1）白底商品主图，2）科技感场景图，3）四个卖点信息图，4）黑五促销广告图。风格：深色科技感、蓝色光效、画面干净。限制：不要改变耳机形状和 Logo，不要虚构参数。</div>
-          <p><strong>修改提示词：</strong>“请只增强蓝色光效和金属质感，不要让背景过暗。卖点图文字区域更清楚，每张只放一个核心卖点。”</p>
-          <p><strong>交付物：</strong>商品主图、降噪场景图、续航图、低延迟图、佩戴舒适图、黑五 Feed 广告、黑五 Story 广告。</p>
-        </div>
-
-        <div class="card">
-          <h3>案例 3：食品饮料 / 生活方式产品</h3>
-          <p><strong>设计目标：</strong>为低糖气泡水做夏季促销和社媒种草。</p>
-          <p><strong>品牌设定：</strong>清爽、年轻、明亮、户外；主色柠檬黄、天空蓝、白色。</p>
-          <button class="copy" data-copy="case3">复制首轮提示词</button>
-          <div class="prompt" id="case3">请为低糖气泡水品牌设计夏季电商营销视觉。目标用户是 20-30 岁喜欢户外和轻健康饮食的年轻人。商品口味包括柠檬、白桃、青柠。请基于我上传的罐身图，生成：1）三口味组合主图，2）夏日户外场景图，3）低糖卖点图，4）促销 Banner，5）社媒广告图。风格：清爽、明亮、有气泡感。限制：不要改变罐身设计，不要虚构营养成分。</div>
-          <p><strong>修改提示词：</strong>“把夏季氛围增强，但不要变成杂乱海报。减少水果数量，保留气泡和冰块质感，商品罐身更清晰。”</p>
-          <p><strong>多尺寸适配：</strong>店铺横幅、详情页模块、Instagram Feed、小红书封面、邮件头图。</p>
-        </div>
-      </section>
-
-      <section id="tips">
-        <h2>七、使用技巧和避坑</h2>
-        <div class="grid">
-          <div class="card">
-            <h3>减少 AI 味</h3>
-            <ul>
-              <li>用真实商品图做基础，不要只靠文字生成商品。</li>
-              <li>要求“真实摄影光线、自然阴影、不过度锐化、不过度塑料感”。</li>
-              <li>一张图只表达一个主卖点，避免堆满元素。</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>保持商品真实</h3>
-            <ul>
-              <li>每次提示都写“不要改变商品结构、Logo、包装文字、颜色”。</li>
-              <li>重要商品图生成后，对照实物逐项检查。</li>
-              <li>对透明、反光、金属、小件商品，要多做人工复核。</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>控制品牌一致性</h3>
-            <ul>
-              <li>先建 Brand Kit，再做批量图。</li>
-              <li>把成功的一组图保存为 Custom Skill，下一批 SKU 复用流程。</li>
-              <li>同一系列商品用同一光线、背景、构图比例。</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>处理中文文案</h3>
-            <ul>
-              <li>中文短标题可以直接生成，长文案建议后期精排。</li>
-              <li>把标题、副标题、按钮分层写清楚。</li>
-              <li>导出前逐字检查错别字、标点、价格和活动规则。</li>
-            </ul>
-          </div>
-        </div>
-
-        <h3>哪些任务在 Lovart 做，哪些任务导出后精修</h3>
-        <table>
-          <tr><th>在 Lovart 内完成</th><th>导出后建议精修</th></tr>
-          <tr><td>生成视觉方向、换背景、场景图、广告变化、Mockup、扩图、去背景、局部改图</td><td>最终中文排版、平台规范复核、法务/功效审查、像素级对齐、复杂表格、印刷前检查</td></tr>
-        </table>
-
-        <div class="warn">
-          <p><strong>重要：</strong>官方和第三方资料都强调 Lovart 能提升速度，但电商图片会直接影响消费者判断。商品颜色、材质、尺寸、功效、认证、活动价格必须人工复核，不能让 AI 自己发挥。</p>
-        </div>
-      </section>
-
-      <section id="checklist">
-        <h2>八、实战检查清单</h2>
-        <div class="grid-3">
-          <div class="card">
-            <h3>设计前</h3>
-            <ul class="checklist">
-              <li>商品真实图片是否足够清晰</li>
-              <li>平台尺寸和规则是否确认</li>
-              <li>品牌色、Logo、字体是否准备好</li>
-              <li>目标用户和核心卖点是否明确</li>
-              <li>不能改变和不能宣传的内容是否写清楚</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>生成中</h3>
-            <ul class="checklist">
-              <li>是否先出多个方向再选一个</li>
-              <li>是否用 @ 引用 Brand Kit 或商品图</li>
-              <li>是否每轮只改一个明确问题</li>
-              <li>是否保留原图和中间版本</li>
-              <li>是否对比竞品缩略图效果</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>导出前</h3>
-            <ul class="checklist">
-              <li>商品结构、颜色、Logo 是否准确</li>
-              <li>中文文案、价格、活动规则是否正确</li>
-              <li>是否有虚构认证、夸大功效、错误参数</li>
-              <li>尺寸、清晰度、文件格式是否符合渠道</li>
-              <li>多 SKU 放在一起是否风格统一</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="sources">
-        <h2>九、资料来源与可信度说明</h2>
-        <p>本教程优先依据 Lovart 官方 Docs 和官方博客，第三方内容只作为使用经验参考。价格、模型列表、平台规范、商业授权和功能可用性可能变化，正式商用前请以 Lovart 当前页面和对应电商平台后台为准。</p>
-        <h3>Lovart 官方 Docs</h3>
-        <ul>
-          <li><a href="https://www.lovart.ai/zh/docs/getting-started/how-lovart-works">How Lovart Works</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/getting-started/things-you-should-set-up-first">Things You Should Set Up First</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/getting-started/design-your-first-project">Design Your First Project</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/how-to-prompt/adding-references">Adding References</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/how-to-prompt/selecting-ai-models">Selecting AI Models</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/how-to-prompt/chat-tools">Chat Tools</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/how-to-prompt/agent-skills">Agent Skills</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/edit-your-design/basic-editing">Basic Editing</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/edit-your-design/basic-ai-editing">Basic AI Editing</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/edit-your-design/advanced-ai-editing">Advanced AI Editing</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/edit-your-design/ai-transformation">AI Transformation</a></li>
-          <li><a href="https://www.lovart.ai/zh/docs/export-your-assets/export-formats">Export Formats</a></li>
-        </ul>
-        <h3>补充参考</h3>
-        <ul>
-          <li><a href="https://www.lovart.ai/blog/how-to-generate-product-images-ai-bing">Lovart 官方博客：How to Generate Product Images with AI for E-Commerce</a></li>
-          <li><a href="https://www.lovart.ai/blog/best-ai-design-agent-for-ecommerce-seller">Lovart 官方博客：Best AI Design Agent for Ecommerce Sellers</a></li>
-          <li><a href="https://www.tomsguide.com/ai/with-one-prompt-i-built-an-entire-brand-kit-in-an-hour-using-lovart">Tom's Guide：With one prompt, I built an entire brand kit in an hour using Lovart</a></li>
-          <li><a href="https://lovart.fyi/prompts">Lovart.fyi Prompt Library</a></li>
-          <li><a href="https://lovart.fyi/community/ecommerce-product-photography-ai">Lovart.fyi：E-Commerce Product Photography with AI</a></li>
-        </ul>
-      </section>
-
-      <footer>
-        <p>文件用途：本地学习与工作流参考。建议你实际操作时从“商品主图”或“促销 Banner”任选一个真实商品，先跑一遍完整流程，再沉淀自己的 Brand Kit 和 Custom Skill。</p>
-      </footer>
-    </main>
+  <div class="meta-note" id="s0">
+    <b>📌 阅读说明（请先看）：</b>本教程基于 Lovart 官方公开信息与多篇第三方实测教程整理而成，每个关键结论在文末「资料来源」处都有链接可核对。
+    由于 Lovart 更新很快、且部分官方文档对细节（如每次生成消耗多少积分、免费版水印政策、各模型确切版本）说明不全，文中凡是<b>不确定的地方都标注了「⚠️ 需实测验证」</b>，请以你实际登录后看到的为准，切勿当成铁律。本文写于 2026 年 6 月，价格与模型会变。
   </div>
 
-  <script>
-    document.querySelectorAll(".copy").forEach(function(button) {
-      button.addEventListener("click", async function() {
-        var id = button.getAttribute("data-copy");
-        var target = document.getElementById(id);
-        if (!target) return;
-        try {
-          await navigator.clipboard.writeText(target.innerText.trim());
-          var old = button.innerText;
-          button.innerText = "已复制";
-          setTimeout(function() { button.innerText = old; }, 1200);
-        } catch (e) {
-          button.innerText = "请手动复制";
-        }
-      });
-    });
-  </script>
+  <!-- ============ 一、Lovart 是什么 ============ -->
+  <h2 class="sec" id="s1"><span class="n">一</span>Lovart 是什么</h2>
+  <p class="lead">先用产品经理能听懂的话，把它讲清楚。</p>
+
+  <h3>一句话理解</h3>
+  <div class="card">
+    <p>Lovart 把自己定位成<b>「全球第一个设计智能体（AI Design Agent）」</b>。你可以把它想成一个<b>「住在网页里的 AI 设计团队」</b>：你用大白话跟它说需求，它自己拆解任务、找合适的「专家」去画，最后给你一整套能用的视觉物料——logo、海报、商品图、社媒图、详情页、甚至短视频。</p>
+    <p style="margin-bottom:0">关键区别在「<b>智能体（Agent）</b>」三个字：普通 AI 画图工具是「你说一句、它画一张」；Lovart 是「你说一个目标、它替你规划一整套并逐步执行」。这就像——普通工具是「美工」，Lovart 更像「能听懂需求、会自己安排活儿的设计主管」。</p>
+  </div>
+
+  <h3>它和你熟悉的工具有什么不一样</h3>
+  <table>
+    <tr><th>工具</th><th>它本质是什么</th><th>最适合的活儿</th><th>电商场景下的体感</th></tr>
+    <tr><td><b>Lovart</b></td><td>对话式 AI 设计智能体</td><td>从 0 到 1 出「整套」视觉方案</td><td>说一句需求，出一批风格统一的商品图/海报/社媒图，还能改</td></tr>
+    <tr><td>普通 AI 画图<br>(Midjourney 等)</td><td>文生图模型</td><td>出「单张」高质量/艺术感图</td><td>图好看，但不分图层、改字难、做不了「成套物料」</td></tr>
+    <tr><td>Canva</td><td>模板拖拽工具</td><td>套模板快速做图</td><td>上手快、模板多，但要你自己动手拼；偏「人来做」</td></tr>
+    <tr><td>Figma</td><td>专业矢量设计/协作工具</td><td>精细排版、设计系统、团队协作</td><td>控制最精准，但门槛高、纯靠人画</td></tr>
+  </table>
+  <div class="callout info">
+    <b>一句话总结四者关系：</b>Midjourney 负责「画得美」，Canva/Figma 负责「人来精修」，而 <b>Lovart 负责「替你把一整套设计先想好、做出来、还能对话式地改」</b>。实际工作里，常见组合是：<b>Lovart 出整套初稿 → 导出到 Figma / PS / Canva 做最后微调</b>。
+    <div class="src">来源：<a href="https://www.lovart.ai/blog/best-logo-design-platform" target="_blank">Lovart 官方对比博客</a>、<a href="https://buzz.uni.edu/w-ai-drafts/canvas-ai-vs-lovart-vs-midjourney-comparison/" target="_blank">第三方对比</a></div>
+  </div>
+
+  <h3>它适合 / 不适合什么电商任务</h3>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--green)">
+      <h4 style="margin-top:4px;color:var(--green)">✅ 适合（在 Lovart 里做最省事）</h4>
+      <ul style="margin-bottom:0">
+        <li>从 0 出一整套<b>品牌视觉</b>（logo、配色、字体规范）</li>
+        <li>批量出<b>风格统一</b>的商品图、社媒图（9 宫格、整套）</li>
+        <li>商品<b>换背景、换场景</b>（白底图 → 生活场景图）</li>
+        <li>促销<b>海报、Banner</b> 初稿（自动留商品位、带出血线）</li>
+        <li>同一张图<b>适配多个平台多尺寸</b></li>
+        <li>把<b>参考图/品牌色</b>喂进去，保持整套调性一致</li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warn)">
+      <h4 style="margin-top:4px;color:var(--warn)">⚠️ 不适合（建议导出后用别的工具收尾）</h4>
+      <ul style="margin-bottom:0">
+        <li><b>大段精准中文文案排版</b>——AI 写中文字容易缺笔画/乱码</li>
+        <li><b>像素级精细控制</b>（字距、对齐、kerning）</li>
+        <li><b>商品必须 100% 还原</b>的合规主图（如标注成分、容量数字）</li>
+        <li>需要<b>企业级协作/版本管理/权限</b>的团队流程</li>
+        <li>复杂的<b>视频精剪</b>（时间轴、特效精调）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn">
+    <b>给电商人的实话：</b>Lovart 最大的价值是「<b>把出初稿的时间从几小时压到几分钟</b>」，特别适合做单时快速出一批氛围图、场景图、海报草稿。但<b>涉及法律合规、精确数字、必须真实的主图，AI 生成的图务必人工核对</b>，关键信息（价格、成分、容量、规格）最好导出后用 PS/Figma 自己打字覆盖，别让 AI 来写。<span class="src">（多篇测评共识：精细排版与文字需 pro 工具收尾。来源见文末）</span>
+  </div>
+
+  <!-- ============ 二、核心工作方式 ============ -->
+  <h2 class="sec" id="s2"><span class="n">二</span>Lovart 的核心工作方式</h2>
+  <p class="lead">理解它「怎么干活」，你才知道该怎么跟它说话。</p>
+
+  <h3>2.1 基本工作流：像跟设计主管对话</h3>
+  <div class="card">
+    <p>Lovart 的核心交互叫 <b>对话式画布（ChatCanvas）</b>。整个流程很像在微信上指挥一个设计：</p>
+    <ol style="margin-bottom:0">
+      <li><b>你说需求</b>（自然语言，越具体越好）→</li>
+      <li>它<b>理解并拆解任务</b>，先告诉你它打算怎么做（产出还附带「思考过程」说明）→</li>
+      <li>一次给你<b>多个方案</b>（比如 4 个 logo、9 张图）让你挑 →</li>
+      <li>你<b>挑一个、再用对话提修改意见</b>（改色、改字、换背景…）→</li>
+      <li>满意后<b>在画布上精调 + 导出</b>。</li>
+    </ol>
+  </div>
+  <p>官方提供三种交互模式，你不用刻意记，知道大概意思即可：</p>
+  <table>
+    <tr><th>模式</th><th>大白话解释</th><th>什么时候用</th></tr>
+    <tr><td><b>Convo（对话）</b></td><td>像跟「创意总监」聊天，说需求、提意见</td><td>从 0 出方案、提修改，<b>最常用</b></td></tr>
+    <tr><td><b>Tap-Tap（点一点）</b></td><td>系统主动提示「下一步建议这么改」，你点确认</td><td>不知道怎么改时，跟着它的建议走</td></tr>
+    <tr><td><b>Canvas（画布）</b></td><td>传统画布手动微调（拖元素、改字、调色）</td><td>方案基本满意、做最后精修</td></tr>
+  </table>
+  <div class="src">来源：<a href="https://www.ai138.com/ai-guide/lovart-ai" target="_blank">AI138 全面解析</a>、<a href="https://zhuanlan.zhihu.com/p/1909534815574814791" target="_blank">知乎提示词实战指南</a></div>
+
+  <h3>2.2 它内部其实是「一个团队」（理解这点能写出更好的需求）</h3>
+  <div class="card">
+    <p>有人扒过 Lovart 的内部逻辑：它不是一个 AI，而是<b>一个「前台 + 多个专家」的小团队</b>在协作。前台先听你的需求、判断这是什么类型的活儿，再派给对应的专家：</p>
+    <ul style="margin-bottom:6px">
+      <li><b>前台（Coco）</b>：听需求、分类任务</li>
+      <li><b>通用设计（Lumen）</b>：常规图像/海报设计</li>
+      <li><b>VI 设计（Vireo）</b>：品牌视觉系统</li>
+      <li><b>海报（Poster）</b>：营销海报</li>
+      <li><b>IP 形象（IPMan）</b>：吉祥物/角色</li>
+      <li><b>分镜/视频（Cameron）</b>：故事板、短视频</li>
+    </ul>
+    <p style="margin-bottom:0"><b>对你的启发：</b>你说需求时如果用上行业词（「品牌 VI」「分镜」「商品主图」「电商详情页」），相当于直接「点名找对的专家」，它就更容易给你专业结果。反过来，说得太笼统（「帮我做个好看的图」），前台不好分派，结果就泛泛。</p>
+  </div>
+  <div class="src">来源：<a href="https://www.woshipm.com/ai/6217253.html" target="_blank">人人都是产品经理 · Lovart 系统提示词拆解</a></div>
+
+  <h3>2.3 Prompt（你给它的文字指令）如何影响结果</h3>
+  <p>「Prompt」就是你打给它的那段需求描述。它好不好，直接决定出图好不好。官方与多篇实测总结出三个原则：</p>
+  <div class="grid2">
+    <div class="card"><h4 style="margin-top:4px">① 分层描述</h4><p style="margin-bottom:0">把需求拆成<b>基础层（画什么）+ 风格层（什么调性）+ 细节层（光线/构图/限制）</b>，别一锅炖。</p></div>
+    <div class="card"><h4 style="margin-top:4px">② 给足上下文</h4><p style="margin-bottom:0">不只说「做什么」，还要说<b>「给谁看、用在哪、想达到什么效果」</b>（品牌理念、目标人群、投放平台）。</p></div>
+    <div class="card"><h4 style="margin-top:4px">③ 明确约束</h4><p style="margin-bottom:0">把「<b>不要什么</b>」写清楚（不要变形、不要改 logo、不要改容量数字），AI 才不跑偏。</p></div>
+    <div class="card"><h4 style="margin-top:4px">④ 迭代思维</h4><p style="margin-bottom:0">别指望一次到位。<b>先出方向 → 再一轮轮提意见</b>，每轮只改一两个点，最稳。</p></div>
+  </div>
+  <div class="callout tip"><b>电商例子：</b>「帮我做个面膜海报」=及格线以下；「<b>为一款主打<u>玻尿酸补水</u>的面膜做<u>小红书种草图</u>，给<u>25-35 岁女性</u>看，要<u>水光通透、干净高级</u>的感觉，<u>竖版 3:4</u>，<u>不要在产品上加多余文字</u></b>」=能出好结果。<span class="src">来源：<a href="https://zhuanlan.zhihu.com/p/1909534815574814791" target="_blank">知乎实战指南</a></span></div>
+
+  <h3>2.4 参考图、品牌信息、商品素材分别怎么用</h3>
+  <table>
+    <tr><th>你手里的东西</th><th>怎么喂给 Lovart</th><th>作用</th></tr>
+    <tr><td><b>参考图</b>（你喜欢的风格图/竞品图）</td><td>上传图片 + 文字说「参考这个的风格/构图」</td><td>快速锁定调性，比纯文字描述准得多</td></tr>
+    <tr><td><b>商品素材</b>（你的真实产品图/白底图）</td><td>上传产品图，让它「换背景/做场景/保持产品不变」</td><td>保住商品真实样子，只换环境</td></tr>
+    <tr><td><b>品牌信息</b>（品牌色、logo、slogan、调性）</td><td>在需求里写明品牌色值、上传 logo，或先让它生成 VI 再「沿用」</td><td>整套物料风格统一</td></tr>
+    <tr><td><b>已生成的元素</b></td><td>点画布上的元素「加入对话作为参考」</td><td>让后续图沿用同一套视觉</td></tr>
+  </table>
+  <div class="callout warn"><b>⚠️ 需实测验证：</b>「上传真实产品图后能多大程度 100% 保住商品原貌」各家反馈不一——AI 仍可能微调产品细节。<b>对必须真实还原的主图，建议把 AI 当「出背景/出氛围」，最终把真实产品图合成上去</b>，而不是让 AI 重画产品本身。</div>
+
+  <h3>2.5 多轮修改怎么做</h3>
+  <div class="card">
+    <p>满意一版后，<b>不要推倒重来，而是基于这版继续提意见</b>。Lovart 支持「图文分离」——它生成的海报会自动把文字、前景、背景拆成可编辑图层（类似 Photoshop 的图层），所以你可以：</p>
+    <ul style="margin-bottom:0">
+      <li>直接<b>选中文字改内容/字号/颜色</b>（保持原字体）</li>
+      <li>把<b>前景、背景、文字拆开</b>分别调</li>
+      <li>用对话说「<b>背景换成圣诞氛围、产品和文字不动</b>」</li>
+    </ul>
+  </div>
+  <div class="src">来源：<a href="https://blog.csdn.net/weixin_49199926/article/details/156143333" target="_blank">CSDN · 5 场景教程</a>、<a href="https://zhuanlan.zhihu.com/p/2001655268048668384" target="_blank">知乎 · 实测</a></div>
+
+  <h3>2.6 怎样让输出更「可商用」</h3>
+  <ul>
+    <li><b>先定 VI 再做物料</b>：先让它出一套品牌视觉（色/字/logo），后续所有图都「沿用这套」，整体就专业。</li>
+    <li><b>关键文字别让 AI 写</b>：价格、规格、卖点等精确文案，导出后自己打字覆盖。</li>
+    <li><b>选对底层模型</b>：Lovart 内置多个图像模型（如 Nano Banana Pro 等），不同任务可切换。<span class="pill">⚠️ 需实测验证：模型清单会更新</span></li>
+    <li><b>导出专业格式</b>：支持 PNG/JPG（含透明）、SVG、PSD（分层）、PDF、MP4，可接 Figma/PS 收尾。</li>
+  </ul>
+  <div class="src">来源：<a href="https://skywork.ai/blog/lovart-ai-review-2025-design-agent/" target="_blank">Skywork 测评（导出格式）</a></div>
+
+  <!-- ============ 三、电商设计使用地图 ============ -->
+  <h2 class="sec" id="s3"><span class="n">三</span>电商设计使用地图</h2>
+  <p class="lead">把「用 Lovart 做电商设计」按流程拆成 9 步，照着走不乱。</p>
+
+  <div class="card">
+    <table style="margin:0;border:none">
+      <tr><th style="width:60px">阶段</th><th>你要做的事</th><th>关键动作 / 小贴士</th></tr>
+      <tr><td><b>1 准备</b></td><td>注册登录、了解界面、想清楚这次要交付什么</td><td>先列「交付清单」：要几张图、什么尺寸、投哪个平台</td></tr>
+      <tr><td><b>2 商品素材整理</b></td><td>备好产品图（最好白底高清）、logo、品牌色值、卖点文案</td><td>素材越干净，出图越稳。白底图最好用</td></tr>
+      <tr><td><b>3 设计目标定义</b></td><td>明确：给谁看、用在哪、要达到什么效果</td><td>一句话写清楚「人群+场景+目标」</td></tr>
+      <tr><td><b>4 风格方向设定</b></td><td>定调性（高级/活泼/性冷淡/国潮…）、配色、参考图</td><td>找 1-2 张参考图上传，比形容词管用</td></tr>
+      <tr><td><b>5 生成首版</b></td><td>用对话发出第一条需求，让它出多个方案</td><td>一次让它多出几版，横向挑</td></tr>
+      <tr><td><b>6 多轮修改</b></td><td>挑一版，逐轮提意见，每轮只改 1-2 点</td><td>用「保持 X 不变，只改 Y」的句式</td></tr>
+      <tr><td><b>7 多尺寸适配</b></td><td>让它把定稿改成各平台尺寸</td><td>说清目标平台和比例（见附录尺寸表）</td></tr>
+      <tr><td><b>8 导出与复用</b></td><td>导出 PNG/PSD/SVG 等，关键文案在外部覆盖</td><td>合规信息务必人工核对</td></tr>
+      <tr><td><b>9 建品牌资产库</b></td><td>把定稿的 VI、配色、常用模板沉淀下来反复用</td><td>下次直接「沿用上次品牌套系」</td></tr>
+    </table>
+  </div>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 四、核心场景教程 ============ -->
+  <h2 class="sec" id="s4"><span class="n">四</span>核心场景教程</h2>
+  <p class="lead">8 个最常用的电商场景，每个都给你：业务目标 → 准备材料 → 操作步骤 → 可复制的中英文提示词 → 常见问题 → 优化技巧 → 推荐尺寸。提示词点右上角「复制」即可拿走。</p>
+
+  <!-- 场景1 商品主图 -->
+  <h3 id="s4-1">① 商品主图</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>做出干净、专业、能突出卖点的商品展示图（白底主图 / 透明底图），用于详情页第一张、列表页缩略图。</p>
+    <p><b>📍 适用场景：</b>淘宝/天猫/京东主图、亚马逊主图、拼多多商品图。</p>
+    <p><b>🧰 准备材料：</b>产品高清图（最好白底）、品牌色、要突出的卖点（如「便携」「大容量」）。</p>
+    <p style="margin-bottom:6px"><b>🪜 推荐步骤：</b></p>
+    <ol style="margin-bottom:0">
+      <li>上传你的产品图，告诉它「保持产品本身不变，只处理背景与光影」。</li>
+      <li>说清主图要求：纯净背景、清晰透视、突出哪个卖点。</li>
+      <li>让它出 3-4 版，挑最干净的一版。</li>
+      <li>对话微调：阴影、反光、角度、留白。</li>
+      <li>导出 PNG（透明底）或 1:1 白底图。</li>
+    </ol>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 商品主图</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是一名资深电商视觉设计师。请基于我上传的产品图，制作一张电商平台主图。
+产品：[填写，如「便携式无线榨汁杯」]
+要求：纯白背景、产品居中、清晰透视、商业摄影级柔和光影、轻微地面投影、画面干净留白。
+突出卖点：[如「小巧便携」]，可在产品旁用极简方式暗示，但不要在产品表面添加任何文字或贴纸。
+构图：正方形 1:1，产品占画面约 70%。
+限制：严格保持产品的形状、颜色、logo、按钮位置不变，不要变形、不要更改产品结构。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Product Hero Shot</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are a senior e-commerce visual designer. Using the product image I uploaded, create a marketplace hero image.
+Product: [e.g. portable wireless juicer cup]
+Requirements: pure white background, product centered, clear perspective, commercial-grade soft studio lighting, subtle ground shadow, clean negative space.
+Key selling point: [e.g. compact & portable] — hint subtly beside the product, but do NOT add any text or stickers on the product surface.
+Composition: square 1:1, product fills ~70% of frame.
+Constraints: strictly preserve the product's shape, color, logo and button placement. No distortion, do not alter product structure.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>① 产品被 AI「重画」走样 → 在限制里反复强调「保持产品不变」，或改用「只换背景」思路。② 主图加了乱码文字 → 明确「产品表面不要任何文字」。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>主图合规信息（容量、型号）<b>千万别让 AI 写</b>，导出后自己加。想要透明底就明确说「输出透明背景 PNG」。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">淘宝/天猫主图 800×800 或 1:1</span><span class="pill">京东 800×800</span><span class="pill">亚马逊 ≥1000×1000（可放大）</span><span class="pill b">白底/透明底 PNG</span></p>
+
+  <!-- 场景2 商品场景图 -->
+  <h3 id="s4-2">② 商品场景图（换背景 / 场景化展示）</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>把白底产品放进真实使用场景里，让用户「看到用起来的样子」，提升种草感。这是 Lovart <b>最擅长、电商最实用</b>的能力之一。</p>
+    <p><b>📍 适用场景：</b>详情页氛围图、社媒种草图、做单时群里发的「生活感」商品图。</p>
+    <p><b>🧰 准备材料：</b>白底产品图、想要的场景描述（厨房台面 / 咖啡店 / 卧室床头…）。</p>
+    <p style="margin-bottom:6px"><b>🪜 推荐步骤：</b></p>
+    <ol style="margin-bottom:0">
+      <li>上传白底产品图。</li>
+      <li>描述目标场景、光线、氛围、配角道具。</li>
+      <li>让它一次出多个场景版本，横向挑。</li>
+      <li>用对话微调光影使产品「融进」场景（避免贴图感）。</li>
+    </ol>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 场景图/换背景</span><button onclick="copyPrompt(this)">复制</button></div><pre>请把我上传的产品自然地放进真实使用场景中，做成一张高级感的生活方式电商图。
+产品：[如「香薰蜡烛」]，请保持产品本身外观、颜色、标签完全不变。
+场景：[如「清晨的北欧风卧室床头柜，旁边有一本翻开的书和一杯热茶」]
+光线：柔和自然光，暖色调，浅景深背景虚化。
+氛围：温馨、治愈、真实生活感，不要塑料感、不要过度修图。
+要求：产品与环境光影一致、有真实投影，看起来是真实摆拍而非合成。
+构图：[如 4:5 竖版]，产品为视觉主体。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Lifestyle / Background Swap</span><button onclick="copyPrompt(this)">复制</button></div><pre>Place my uploaded product naturally into a real usage scene, as a premium lifestyle e-commerce photo.
+Product: [e.g. scented candle] — keep its appearance, color and label exactly unchanged.
+Scene: [e.g. a Scandinavian bedroom nightstand at dawn, with an open book and a cup of hot tea].
+Lighting: soft natural light, warm tones, shallow depth of field with blurred background.
+Mood: cozy, healing, authentic everyday life — avoid plastic/over-retouched look.
+Requirements: product lighting and shadows must match the environment with realistic cast shadow, looking like a real photo, not a composite.
+Composition: [e.g. 4:5 vertical], product as the focal subject.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>产品「飘」在场景上、有贴图感 → 强调「光影一致、有真实投影」；必要时分两步：先生成空场景，再把产品合成进去人工调光。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>一句「产品保持不变，只换环境」能大幅降低走样。想要整组统一，让它「同一产品出 6 个不同场景，风格一致」。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">详情页氛围图 750 宽</span><span class="pill">小红书 3:4（1080×1440）</span><span class="pill">Instagram 4:5（1080×1350）</span></p>
+
+  <!-- 场景3 促销Banner -->
+  <h3 id="s4-3">③ 促销 Banner / 横幅图</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>做首页/活动页/店铺的横幅广告，传达活动信息（满减、新品、上新），吸引点击。</p>
+    <p><b>📍 适用场景：</b>App 首焦图、H5 活动 Banner、店铺首页横幅、详情页促销条。</p>
+    <p><b>🧰 准备材料：</b>活动主题、主推商品图、利益点文案（如「满 199 减 50」）、品牌色。</p>
+    <p style="margin-bottom:0"><b>🪜 推荐步骤：</b>描述活动主题与氛围 → 让它出带留白的版式（预留商品位与文案位）→ 用图层把文案换成你的精确文案 → 出多尺寸。</p>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 促销 Banner</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是电商首页 Banner 设计师。设计一张横版促销 Banner。
+活动：[如「夏季清凉大促」]，主推商品：[如「便携小风扇」]（用我上传的产品图）。
+主标题文案：[如「夏日清凉季」]；副文案/利益点：[如「全场满199减50」]。
+视觉风格：[如「清爽蓝白、夏日感、年轻活力」]，符合品牌主色 [填色值/描述]。
+版式：左文右产品（或你建议的最佳版式），主标题醒目、有视觉层级，预留干净的文案排版区。
+构图：横版 [如 1920×640 / 3:1]。
+限制：文字区域先放占位文案、保持清晰可替换；不要让文字与产品重叠；产品保持原样不变形。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Promo Banner</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are an e-commerce homepage banner designer. Design a horizontal promotional banner.
+Campaign: [e.g. Summer Cool Sale], hero product: [e.g. portable mini fan] (use my uploaded image).
+Headline: [e.g. "Summer Cool Season"]; sub-copy/offer: [e.g. "Save $50 over $199"].
+Visual style: [e.g. fresh blue-white, summery, young & energetic], matching brand primary color [value/desc].
+Layout: text-left / product-right (or your best layout), bold headline with clear hierarchy, reserve a clean text area.
+Composition: horizontal [e.g. 1920×640 / 3:1].
+Constraints: keep text as clear, replaceable placeholders; no overlap between text and product; keep product unchanged and undistorted.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>中文促销字易出错/不齐 → 让 AI 只做版式与氛围，<b>关键文案导出后在 Figma/PS/Canva 打字</b>。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>先让它给「版式建议」，确定布局再细化；要求「文字与产品分图层」方便替换。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">App 首焦 750×350 左右</span><span class="pill">PC 横幅 1920×640（3:1）</span><span class="pill">详情页促销条 750×200</span></p>
+
+  <!-- 场景4 社媒广告图 -->
+  <h3 id="s4-4">④ 社交媒体广告图</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>做投放/种草用的社媒图，强调「人感、真实、有氛围」，让人愿意停留和点击。</p>
+    <p><b>📍 适用场景：</b>小红书种草图、抖音/朋友圈广告图、Instagram/Facebook 投放图。</p>
+    <p><b>🧰 准备材料：</b>产品图、目标平台与比例、人群、想要的情绪/风格、（可选）模特参考。</p>
+    <p style="margin-bottom:0"><b>🪜 推荐步骤：</b>说清平台+比例+人群+情绪 → 让它出一组（如 9 宫格）统一风格图 → 挑选 → 微调皮肤/光线真实感。</p>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 小红书种草图</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是小红书爆款图设计师。为这款产品做一张种草风格图。
+产品：[如「玻尿酸补水精华」]，使用我上传的产品图，保持瓶身与标签不变。
+平台：小红书（竖版 3:4）。目标人群：25-35 岁注重护肤的女性。
+画面：水光感通透、干净高级、清新治愈；如出现模特/手部，皮肤要真实有质感、有毛孔，不要假滑塑料感。
+氛围：晨间梳妆台/水面波光，浅景深，柔和自然光。
+限制：产品表面不要添加文字；如有手部需自然无畸形；整体不要浓重 AI 痕迹。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Social Ad (RED/IG style)</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are a top social-commerce image designer. Create a "种草"/recommendation-style image for this product.
+Product: [e.g. hyaluronic acid serum], use my uploaded image, keep bottle and label unchanged.
+Platform: vertical 3:4 (RED/Instagram). Audience: women 25-35 into skincare.
+Look: dewy translucent, clean & premium, fresh and healing; if a model/hands appear, skin must look real with texture and pores, no plastic over-smoothing.
+Mood: morning vanity table / shimmering water surface, shallow depth of field, soft natural light.
+Constraints: no text on product; hands (if any) natural with no deformity; minimize obvious AI artifacts.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>模特手部/手指畸形、皮肤假 → 明确「手部自然无畸形、皮肤真实有毛孔」；问题严重就换构图避开手部。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>上传真人参考图可保持「同一个模特」跨多图一致；要整组就让它「出 3×3 九宫格，风格统一」。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">小红书 3:4（1080×1440）</span><span class="pill">抖音/朋友圈竖版 9:16（1080×1920）</span><span class="pill">Instagram 方图 1:1 / 4:5</span></p>
+  <div class="src">场景①-④ 提示词技巧综合参考：<a href="https://www.10100.com/article/96209026" target="_blank">大数跨境 · Skills 与 50 组提示词</a>、<a href="https://blog.csdn.net/weixin_49199926/article/details/156143333" target="_blank">CSDN · 5 场景教程</a></div>
+
+  <!-- 场景5 详情页模块 -->
+  <h3 id="s4-5">⑤ 商品详情页视觉模块</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>做详情页里的「卖点模块」——一屏讲一个卖点（材质、功能、使用方法、对比图），让用户边滑边被说服。</p>
+    <p><b>📍 适用场景：</b>淘宝/天猫/京东详情页长图、独立站产品页模块。</p>
+    <p><b>🧰 准备材料：</b>产品图、要讲的卖点清单（每个卖点一句话）、品牌风格。</p>
+    <p style="margin-bottom:0"><b>🪜 推荐步骤：</b>先列出 4-6 个卖点 → 让它<b>一个卖点出一屏模块</b>、整组风格统一 → 文案占位、导出后替换精确文案 → 竖向拼成长图。</p>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 详情页卖点模块</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是电商详情页视觉设计师。为这款产品设计一组风格统一的详情页卖点模块（共 [4] 屏，每屏讲一个卖点）。
+产品：[如「不锈钢保温杯」]（用我上传的产品图，保持不变）。
+卖点（每屏一个）：①[长效保温12小时] ②[316食品级内胆] ③[一键弹盖单手开] ④[便携防漏]。
+风格：[如「简约高级、浅灰背景、品牌色点缀」]，每屏都有：大标题区 + 卖点说明区 + 产品/细节特写。
+版式：竖版模块，宽度 750px，模块之间风格、配色、字体层级保持一致。
+限制：文案先用占位文字、清晰可替换、与背景分图层；产品细节真实不变形。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · PDP Feature Modules</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are an e-commerce product-detail-page designer. Design a set of style-consistent feature modules ([4] screens, one selling point each).
+Product: [e.g. stainless steel insulated bottle] (use my uploaded image, keep unchanged).
+Selling points (one per screen): ① 12h heat retention ② 316 food-grade liner ③ one-hand flip lid ④ leak-proof & portable.
+Style: [e.g. minimal premium, light-grey background, brand-color accents]; each screen has a headline area + description area + product/detail close-up.
+Layout: vertical modules, 750px wide, consistent color/typography/hierarchy across all screens.
+Constraints: copy as replaceable placeholder text on a separate layer; product details realistic and undistorted.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>多屏之间风格飘、不统一 → 一次性让它出整组并强调「整组统一」，别一张张分开做。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>详情页文字信息量大，<b>强烈建议导出到 Figma/PS 统一排版精确文案</b>，Lovart 负责出底图与风格。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">详情页宽度 750px</span><span class="pill">单屏高 ≤1500px 便于加载</span><span class="pill b">导出 PSD 分层方便改字</span></p>
+
+  <!-- 场景6 品牌视觉套系 -->
+  <h3 id="s4-6">⑥ 品牌视觉套系（VI / 统一风格）</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>从 0 出一套品牌视觉基础——logo、配色、辅助图形、字体规范、包装/物料样机，之后所有电商物料都「沿用这套」，整体专业统一。这是 Lovart 的<b>招牌能力</b>。</p>
+    <p><b>📍 适用场景：</b>新品牌起盘、店铺升级、品牌焕新。</p>
+    <p><b>🧰 准备材料：</b>品牌名、品牌故事/调性、目标人群、主色倾向、（可选）参考风格图。</p>
+    <p style="margin-bottom:0"><b>🪜 推荐步骤：</b>提交品牌需求 → 从多个 logo 方案里挑 → 让它生成完整 VI 系统 → 把 VI 元素「应用」到后续商品图/海报上保持一致。</p>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 品牌 VI 套系</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是品牌视觉设计专家。为我的品牌设计一套完整 VI 视觉系统。
+品牌：[品牌名]，定位：[如「主打天然成分的轻护肤品牌」]，目标人群：[如「都市年轻女性」]。
+调性关键词：[如「自然、温柔、高级、有呼吸感」]。主色倾向：[如「鼠尾草绿 + 米白」]。
+请输出：①Logo（先给我 4 个方案选）②主色/辅助色色板 ③辅助图形 ④字体规范 ⑤包装样机 ⑥社媒头像/封面 等核心物料。
+要求：整套风格统一、留白克制、可商用；东方审美与现代感结合。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Brand VI System</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are a brand visual identity expert. Design a complete VI system for my brand.
+Brand: [name], positioning: [e.g. clean skincare with natural ingredients], audience: [e.g. urban young women].
+Tone keywords: [e.g. natural, gentle, premium, breathable]. Primary color: [e.g. sage green + off-white].
+Deliver: ① Logo (give me 4 options to choose first) ② primary/secondary color palette ③ supporting graphics ④ typography rules ⑤ packaging mockups ⑥ social avatar/cover, etc.
+Requirements: consistent style across all, restrained negative space, commercial-ready, blending oriental aesthetics with modern feel.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>logo 里的文字/字母经常拼错 → logo 文字部分建议挑「图形 OK 的方案」，文字另用专业字体重做。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>定稿 VI 后，后续每次做图都说「<b>沿用 XX 品牌的这套配色与风格</b>」，并把 VI 元素加入对话作参考。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">Logo 导出 SVG（可无损缩放）</span><span class="pill b">色板/规范导出 PDF</span><span class="pill">样机 PNG</span></p>
+  <div class="src">来源：<a href="https://blog.csdn.net/weixin_49199926/article/details/156143333" target="_blank">CSDN · 品牌全案 5 场景</a>、<a href="https://www.ai138.com/ai-guide/lovart-ai" target="_blank">AI138 · VI 能力</a></div>
+
+  <!-- 场景7 节日大促 -->
+  <h3 id="s4-7">⑦ 节日大促物料（618 / 双11 / 黑五 / 圣诞 / 新年）</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>大促前快速产出一整套节日氛围物料——主 KV、Banner、商品图、社媒图，统一节日调性。</p>
+    <p><b>📍 适用场景：</b>618、双 11、黑五、圣诞、新年、情人节、店庆等。</p>
+    <p><b>🧰 准备材料：</b>节日主题、活动利益点、主推商品、品牌色、想要的节日氛围。</p>
+    <p style="margin-bottom:0"><b>🪜 推荐步骤：</b>先定节日主视觉风格（一张主 KV）→ 让它把这套氛围<b>批量套用</b>到 Banner/商品图/社媒图 → 多尺寸适配。</p>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 节日大促主视觉</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是大促视觉总监。为 [双11/618/圣诞/黑五/新年] 大促设计一套主视觉。
+品牌/店铺：[名称]，主推：[如「全屋清洁好物」]。活动利益点：[如「跨店满300减50 + 前100名送赠品」]。
+节日氛围：[如「圣诞：松枝、暖光、红绿金、雪花质感、礼物盒」]，与品牌色协调。
+请先出 1 张主 KV（横版），确定风格后，再延展出：①首页横幅 ②商品促销图 ③社媒倒计时海报，整套风格统一。
+限制：促销文案先用占位、分图层可替换；产品保持真实不变形；节日元素点到为止不要太满。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Holiday Campaign KV</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are a sale-campaign creative director. Design a key visual set for [Double 11 / Christmas / Black Friday / New Year].
+Brand/store: [name], hero category: [e.g. home cleaning essentials]. Offer: [e.g. save $50 over $300 + gift for first 100].
+Holiday mood: [e.g. Christmas: pine, warm light, red-green-gold, snow texture, gift boxes], harmonized with brand colors.
+First produce ONE horizontal key visual; after style is confirmed, extend to: ① homepage banner ② product promo image ③ social countdown poster — all style-consistent.
+Constraints: promo copy as replaceable placeholder on separate layers; keep products realistic and undistorted; keep holiday elements tasteful, not cluttered.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>节日元素堆太满、显廉价 → 提示「节日元素点到为止」「克制留白」。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b>先定一张主 KV 当「风格锚点」，再让它批量延展，整组才统一不散。</div>
+  </div>
+  <p><b>📐 推荐尺寸：</b><span class="pill">主 KV 横版 1920×800</span><span class="pill">App 首焦 750×350</span><span class="pill">社媒竖版 3:4 / 9:16</span></p>
+
+  <!-- 场景8 多平台多尺寸 -->
+  <h3 id="s4-8">⑧ 多平台尺寸改版（一图变多尺寸）</h3>
+  <div class="card">
+    <p><b>🎯 业务目标：</b>把一张定稿，快速适配到不同平台的不同比例，省去重做。</p>
+    <p><b>📍 适用场景：</b>同一活动要同时上淘宝、京东、小红书、抖音、朋友圈。</p>
+    <p><b>🧰 准备材料：</b>已定稿的设计、目标平台与尺寸清单。</p>
+    <p style="margin-bottom:0"><b>🪜 推荐步骤：</b>定稿后，列出所有目标尺寸 → 让它「保持设计风格与元素不变，适配为这些比例」→ 检查每个尺寸的构图是否被裁坏 → 微调。</p>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 多尺寸适配</span><button onclick="copyPrompt(this)">复制</button></div><pre>请把这张已定稿的设计，在保持整体风格、配色、主标题、产品、品牌元素不变的前提下，适配成以下多个尺寸版本：
+① 正方形 1:1（1080×1080，社媒）
+② 竖版 3:4（1080×1440，小红书）
+③ 竖版 9:16（1080×1920，抖音/朋友圈）
+④ 横版 3:1（1920×640，PC 首页横幅）
+要求：每个尺寸都要重新合理排布，避免重要元素（产品、主标题）被裁切或挤压；文案保持清晰可替换。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · Multi-size Resize</span><button onclick="copyPrompt(this)">复制</button></div><pre>Adapt this finalized design into the following sizes, keeping overall style, colors, headline, product and brand elements unchanged:
+① square 1:1 (1080×1080, social)
+② vertical 3:4 (1080×1440)
+③ vertical 9:16 (1080×1920, short-video/stories)
+④ horizontal 3:1 (1920×640, PC homepage banner)
+Requirements: re-compose each size sensibly so key elements (product, headline) are not cropped or squeezed; keep copy clear and replaceable.</pre></div>
+  <div class="grid2">
+    <div class="callout warn" style="margin:8px 0"><b>常见问题：</b>横版改竖版时主体被裁坏 → 让它「为竖版重新排版」而不是简单裁切；必要时分尺寸单独生成。</div>
+    <div class="callout tip" style="margin:8px 0"><b>优化技巧：</b><span class="pill">⚠️ 需实测验证</span> Lovart 批量改尺寸的能力与一致性各版本有差异，量大时建议导出到 Figma 用画框批量适配。</div>
+  </div>
+  <p><b>📐 常用电商尺寸速查见 <a href="#s9" style="color:var(--accent)">附录尺寸表</a>。</b></p>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 五、Prompt 写法 ============ -->
+  <h2 class="sec" id="s5"><span class="n">五</span>Lovart 电商 Prompt 写法</h2>
+  <p class="lead">记住一个公式，套着填空，就能稳定写出好需求。</p>
+
+  <div class="card" style="border:2px solid var(--accent);background:var(--soft)">
+    <h4 style="margin-top:4px;color:#9a3a1a">📐 万能公式（9 要素）</h4>
+    <p style="font-size:17px;font-weight:600;line-height:2;margin:8px 0">
+      角色 ＋ 商品 ＋ 目标用户 ＋ 使用场景 ＋ 视觉风格 ＋ 构图 ＋ 文案 ＋ 尺寸 ＋ 限制条件
+    </p>
+    <table style="margin:6px 0 0;border:none;font-size:13.5px">
+      <tr><th>要素</th><th>填什么</th><th>例子</th></tr>
+      <tr><td><b>角色</b></td><td>让它扮演什么设计师</td><td>「你是资深电商视觉设计师」</td></tr>
+      <tr><td><b>商品</b></td><td>产品是什么、什么特征</td><td>「便携无线榨汁杯，主打小巧」</td></tr>
+      <tr><td><b>目标用户</b></td><td>给谁看</td><td>「健身/上班族年轻女性」</td></tr>
+      <tr><td><b>使用场景</b></td><td>图用在哪</td><td>「小红书种草图」</td></tr>
+      <tr><td><b>视觉风格</b></td><td>调性、配色</td><td>「清新、低饱和、性冷淡」</td></tr>
+      <tr><td><b>构图</b></td><td>布局、主体占比、角度</td><td>「产品居中占 70%、俯拍」</td></tr>
+      <tr><td><b>文案</b></td><td>要不要文字、放哪（占位）</td><td>「左上放主标题占位」</td></tr>
+      <tr><td><b>尺寸</b></td><td>比例/像素</td><td>「竖版 3:4，1080×1440」</td></tr>
+      <tr><td><b>限制条件</b></td><td>不要什么（最重要！）</td><td>「不要变形、不改 logo」</td></tr>
+    </table>
+  </div>
+  <div class="callout tip"><b>新手只记一句话版：</b>「<b>你是【角色】，为【商品】做一张给【人群】在【平台】用的图，要【风格】，【构图】，【尺寸】，注意【不要什么】。</b>」填空即可。</div>
+
+  <h4>📋 基础模板（万能起手式）</h4>
+  <div class="prompt"><div class="bar"><span>基础模板</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是一名资深电商视觉设计师。
+请为【产品：____】设计一张用于【场景/平台：____】的图，目标人群是【____】。
+视觉风格：【____】；构图：【____】；尺寸：【____】。
+限制：保持产品形状/颜色/logo 不变、不要变形、产品表面不加文字。</pre></div>
+
+  <h4>🚀 高级模板（带品牌与情绪，更可商用）</h4>
+  <div class="prompt"><div class="bar"><span>高级模板</span><button onclick="copyPrompt(this)">复制</button></div><pre>角色：你是服务过【行业】头部品牌的电商视觉总监。
+商品：【产品 + 核心卖点】，使用我上传的产品图，保持产品完全不变。
+品牌：主色【色值】，调性【关键词】，沿用我的品牌风格。
+目标用户：【人群画像 + 他们在意什么】。
+使用场景：【平台 + 用途 + 希望用户产生的情绪/行动】。
+视觉风格：【风格词 + 参考：见我上传的参考图】。
+构图：【主体位置/占比/视角/留白/层次】。
+文案：【主标题/副标题用占位文字，单独图层，便于替换】。
+尺寸：【比例 + 像素】。
+限制：不变形、不改 logo、不改产品结构与数字、不要 AI 塑料感、手部自然无畸形。</pre></div>
+
+  <div class="grid2">
+    <div>
+      <h4>🛍 商品主图模板</h4>
+      <div class="prompt"><div class="bar"><span>商品主图</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是电商主图设计师。基于上传产品图做一张纯白底主图：
+产品【__】居中、清晰透视、商业柔光、轻投影、干净留白、1:1。
+限制：产品形状/颜色/logo 不变，表面不加任何文字。</pre></div>
+    </div>
+    <div>
+      <h4>🎏 Banner 模板</h4>
+      <div class="prompt"><div class="bar"><span>Banner</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是首页 Banner 设计师。做横版促销 Banner：
+活动【__】、主推【产品】、利益点【__占位文案】。
+风格【__】、品牌色【__】、左文右产品、文字与产品分图层、横版 3:1。</pre></div>
+    </div>
+    <div>
+      <h4>📑 详情页模板</h4>
+      <div class="prompt"><div class="bar"><span>详情页</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是详情页设计师。做一组风格统一的卖点模块（4 屏，每屏一个卖点）：
+卖点①__ ②__ ③__ ④__；750px 宽、风格/配色/字阶统一、文案占位分层。</pre></div>
+    </div>
+    <div>
+      <h4>📱 社媒广告模板</h4>
+      <div class="prompt"><div class="bar"><span>社媒广告</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是小红书爆款图设计师。为【产品】做竖版 3:4 种草图：
+人群【__】、风格【水光/清新/治愈】、真实有质感不塑料。
+限制：产品不变、产品表面无文字、手部自然。</pre></div>
+    </div>
+    <div>
+      <h4>🎨 品牌套系模板</h4>
+      <div class="prompt"><div class="bar"><span>品牌套系</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是品牌 VI 专家。为【品牌】做整套 VI：
+调性【__】、主色【__】、人群【__】。
+输出 logo(先4个方案)+色板+辅助图形+字体规范+包装样机，整套统一可商用。</pre></div>
+    </div>
+    <div>
+      <h4>🔁 多轮修改模板</h4>
+      <div class="prompt"><div class="bar"><span>多轮修改</span><button onclick="copyPrompt(this)">复制</button></div><pre>在这一版基础上修改：
+保持【产品/构图/品牌色】不变，只把【要改的点：如背景换成暖色】调整。
+其余完全不动。</pre></div>
+    </div>
+  </div>
+
+  <h4>🚫 反向约束模板（电商最容易翻车的地方，建议每次都带）</h4>
+  <div class="prompt"><div class="bar"><span>反向约束（限制条件）</span><button onclick="copyPrompt(this)">复制</button></div><pre>限制条件（务必遵守）：
+1. 严格保持产品的形状、颜色、材质、logo、按钮/接口位置完全不变；
+2. 不要让产品变形、扭曲、改变比例或结构；
+3. 不要修改/遮挡/重写产品上的品牌 logo 与已有文字；
+4. 不要在产品表面添加任何新文字、贴纸、水印；
+5. 不要改变产品的容量/型号/规格等任何数字信息；
+6. 人物的手、手指要自然、数量正确、无畸形；
+7. 整体避免塑料感、过度磨皮、明显 AI 痕迹；
+8. 文案区域使用清晰占位文字并单独成图层，方便我替换。</pre></div>
+  <div class="src">公式与模板综合自：<a href="https://zhuanlan.zhihu.com/p/1909534815574814791" target="_blank">知乎 · 提示词实战指南</a>、<a href="https://www.10100.com/article/96209026" target="_blank">大数跨境 · 提示词</a>、<a href="https://www.woshipm.com/ai/6217253.html" target="_blank">人人都是产品经理 · 系统提示词拆解</a></div>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 六、完整案例 ============ -->
+  <h2 class="sec" id="s6"><span class="n">六</span>完整案例（3 个，可照抄）</h2>
+  <p class="lead">以下案例的品牌为演示虚构，提示词均可直接复制改用。流程：第一版 → 修改 → 多尺寸 → 交付清单。</p>
+
+  <!-- 案例1 美妆 -->
+  <div class="case">
+    <div class="top">
+      <h3>案例 ① 美妆护肤 · 玻尿酸补水精华</h3>
+      <div class="who">品牌「沁润 QINRUN」· 主色鼠尾草绿+米白 · 人群 25-35 岁都市女性 · 目标：小红书种草 + 详情页</div>
+    </div>
+    <div class="body">
+      <p><b>设计目标：</b>3 张小红书种草图 + 1 套详情页卖点模块，统一「水光、干净、高级」调性。</p>
+      <p><b>商品信息：</b>30ml 透明玻璃瓶滴管精华，卖点：玻尿酸补水、温和无香精、熬夜急救。</p>
+      <h4>① 第一次提示词</h4>
+      <div class="prompt"><div class="bar"><span>第一版</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是资深美妆电商视觉设计师。基于我上传的精华瓶产品图，为品牌「沁润」做 3 张风格统一的小红书种草图（竖版 3:4）。
+人群：25-35 岁注重护肤的都市女性。品牌主色：鼠尾草绿 + 米白。
+风格：水光通透、干净高级、清新治愈，晨间梳妆台/水面波光场景，柔和自然光、浅景深。
+保持瓶身、标签、滴管完全不变；产品表面不加文字；整体真实无塑料感。</pre></div>
+      <h4>② 修改提示词</h4>
+      <div class="prompt"><div class="bar"><span>第二版（微调）</span><button onclick="copyPrompt(this)">复制</button></div><pre>在第 2 张基础上修改：保持产品、构图、品牌色不变，
+只把背景水珠减少、增加一点鼠尾草绿植点缀，光线再柔和一档。其余不动。</pre></div>
+      <h4>③ 多尺寸适配提示词</h4>
+      <div class="prompt"><div class="bar"><span>多尺寸</span><button onclick="copyPrompt(this)">复制</button></div><pre>把定稿这张，在保持风格/产品/品牌色不变前提下，适配为：
+① 小红书 3:4（1080×1440）② 详情页氛围图 750 宽 ③ 朋友圈竖版 9:16。
+每个尺寸重新合理排版，产品不被裁切。</pre></div>
+      <p style="margin-bottom:6px"><b>📦 最终交付物清单：</b></p>
+      <ul style="margin-top:0">
+        <li>小红书种草图 ×3（3:4）</li>
+        <li>详情页卖点模块 ×4 屏（750 宽，导出 PSD 分层改字）</li>
+        <li>朋友圈/抖音竖版图 ×1（9:16）</li>
+        <li>透明底主图 ×1（导出 PNG，规格文字外部添加）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 案例2 3C -->
+  <div class="case">
+    <div class="top">
+      <h3>案例 ② 3C 数码 · 真无线蓝牙耳机</h3>
+      <div class="who">品牌「声格 SONGRID」· 主色科技蓝+深空灰 · 人群 18-30 岁通勤/运动人群 · 目标：主图 + 大促 Banner</div>
+    </div>
+    <div class="body">
+      <p><b>设计目标：</b>1 张白底主图 + 3 屏卖点详情 + 1 张 618 大促 Banner，突出「降噪、续航、运动防汗」。</p>
+      <p><b>商品信息：</b>白色充电仓 + 入耳式耳机，卖点：主动降噪、单次 8 小时续航、IPX5 防水。</p>
+      <h4>① 第一次提示词</h4>
+      <div class="prompt"><div class="bar"><span>第一版</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是 3C 数码电商视觉设计师。基于上传的耳机产品图，为品牌「声格」做一张纯白底主图（1:1）。
+风格：科技感、冷调、干净；产品居中、清晰透视、商业柔光、轻微地面投影、充电仓微开露出耳机。
+品牌色：科技蓝 + 深空灰可做光影点缀。
+保持产品形状/颜色/logo/接口位置不变，不变形，表面不加文字。</pre></div>
+      <h4>② 修改提示词</h4>
+      <div class="prompt"><div class="bar"><span>第二版（加卖点详情）</span><button onclick="copyPrompt(this)">复制</button></div><pre>用同样风格，再做 3 屏详情页卖点模块（750 宽，风格统一）：
+①主动降噪（声波/安静意象）②8 小时续航（电量意象）③IPX5 运动防水（水花/运动意象）。
+每屏：大标题占位 + 卖点说明占位 + 产品特写；文案分图层；产品真实不变形。</pre></div>
+      <h4>③ 多尺寸 / 大促适配提示词</h4>
+      <div class="prompt"><div class="bar"><span>618 Banner + 多尺寸</span><button onclick="copyPrompt(this)">复制</button></div><pre>用同一套视觉，做一张 618 大促横版 Banner（1920×640）：
+利益点占位「618 限时直降 ¥100」，科技蓝主色 + 红色促销点缀，左文右产品、文字分图层。
+再把它适配为 App 首焦 750×350 与方图 1:1。产品不变形、不裁切主体。</pre></div>
+      <p style="margin-bottom:6px"><b>📦 最终交付物清单：</b></p>
+      <ul style="margin-top:0">
+        <li>白底主图 ×1（1:1，含透明底 PNG）</li>
+        <li>详情页卖点模块 ×3 屏（750 宽，PSD）</li>
+        <li>618 大促 Banner ×1（1920×640）+ App 首焦 750×350 + 方图 1:1</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 案例3 食品 -->
+  <div class="case">
+    <div class="top">
+      <h3>案例 ③ 食品饮料 · 冷萃咖啡液</h3>
+      <div class="who">品牌「醒醒 WAKEWAKE」· 主色暖棕+奶白 · 人群 都市上班族 · 目标：场景图 + 社媒 + 双11套系</div>
+    </div>
+    <div class="body">
+      <p><b>设计目标：</b>1 组生活场景图 + 1 组社媒九宫格 + 双 11 节日套系，传达「随时一杯、提神不苦」。</p>
+      <p><b>商品信息：</b>独立小瓶冷萃咖啡液，卖点：3 秒冲一杯、0 蔗糖、丝滑不酸涩。</p>
+      <h4>① 第一次提示词</h4>
+      <div class="prompt"><div class="bar"><span>第一版</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是食品饮料电商视觉设计师。基于上传的冷萃咖啡液小瓶，为品牌「醒醒」做一组 6 张生活方式场景图，风格统一。
+场景：清晨办公桌、咖啡店窗边、健身后、居家沙发等真实生活瞬间。
+风格：暖棕+奶白、晨光感、治愈、真实摆拍感，浅景深；可有牛奶倒入、咖啡丝滑流动的诱人细节。
+保持瓶身与标签不变；产品表面不加文字；不要塑料感。</pre></div>
+      <h4>② 修改提示词</h4>
+      <div class="prompt"><div class="bar"><span>第二版（转社媒九宫格）</span><button onclick="copyPrompt(this)">复制</button></div><pre>基于这套风格，做 3×3 社媒九宫格（1:1），保持品牌色与产品一致、构图各有变化、整组统一。
+加入手冲、加冰、加奶等动作细节，真实生活感；产品不变形。</pre></div>
+      <h4>③ 多尺寸 / 双11 套系提示词</h4>
+      <div class="prompt"><div class="bar"><span>双11 套系 + 多尺寸</span><button onclick="copyPrompt(this)">复制</button></div><pre>用同一套暖棕调性，做双11 套系：①主 KV 横版 1920×800（利益点占位「双11 囤一箱·买2送1」）
+②商品促销图 1:1 ③社媒倒计时竖版 9:16。整套风格统一、节日元素克制、文案分图层可替换。</pre></div>
+      <p style="margin-bottom:6px"><b>📦 最终交付物清单：</b></p>
+      <ul style="margin-top:0">
+        <li>生活场景图 ×6（4:5 / 3:4）</li>
+        <li>社媒九宫格 ×9（1:1）</li>
+        <li>双 11 主 KV ×1（1920×800）+ 促销图 1:1 + 倒计时 9:16</li>
+      </ul>
+    </div>
+  </div>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 七、技巧与避坑 ============ -->
+  <h2 class="sec" id="s7"><span class="n">七</span>使用技巧与避坑</h2>
+  <p class="lead">电商场景里最容易踩的坑，以及对应的解法。</p>
+
+  <h3>7.1 如何减少「AI 味」</h3>
+  <ul>
+    <li><b>要真实细节</b>：明确「皮肤有毛孔、材质有真实纹理、有自然投影、浅景深」，少要「完美光滑」。</li>
+    <li><b>避免对称完美</b>：让构图「自然随意、轻微运动模糊、生活抓拍感」，比「居中端正」更真。</li>
+    <li><b>控制饱和度</b>：很多 AI 图一眼假是因为颜色太艳，加一句「低饱和、真实光线、不过曝」。</li>
+    <li><b>用真实参考图</b>：上传一张真实摆拍参考，比形容词管用十倍。</li>
+  </ul>
+
+  <h3>7.2 如何保持商品真实</h3>
+  <div class="callout warn"><b>核心原则：</b>让 AI 做「<b>背景和氛围</b>」，别让它「<b>重画产品</b>」。涉及必须真实/合规的主图，最稳的做法是——<b>AI 出场景底图 → 把你的真实产品图合成上去 → 人工调光影</b>。每次都带<a href="#s5" style="color:var(--accent)">反向约束模板</a>。</div>
+
+  <h3>7.3 如何控制品牌一致性</h3>
+  <ul>
+    <li><b>先定 VI 再做物料</b>，后续每张图都说「沿用 XX 品牌这套配色与风格」。</li>
+    <li>把已生成的<b>品牌元素「加入对话作参考」</b>，让新图继承同一视觉。</li>
+    <li>固定<b>主色色值</b>写进每条提示词，别每次换说法。</li>
+  </ul>
+
+  <h3>7.4 如何让中文文案更稳</h3>
+  <div class="callout warn"><b>⚠️ 这是 AI 出图最大的硬伤。</b>AI 生成中文字常缺笔画、乱码、字间距乱。<b>最佳实践：让 Lovart 只做版式与配色、文字用「占位」，最终精确中文文案一律导出后用 Figma/PS/Canva 自己打字。</b>尤其是价格、规格、活动规则这类一字不能错的信息。</div>
+
+  <h3>7.5 logo / 字体 / 排版 / 人物 / 手部 / 商品结构 常见问题速查</h3>
+  <table>
+    <tr><th>问题</th><th>解法</th></tr>
+    <tr><td>logo 文字拼错 / 变形</td><td>挑「图形部分 OK」的方案，文字用真字体重做；或在限制里「不要改写 logo」</td></tr>
+    <tr><td>中文字乱码 / 缺笔画</td><td>文字占位，导出后人工打字</td></tr>
+    <tr><td>排版不齐 / 字距乱</td><td>导出到 Figma/PS 精排</td></tr>
+    <tr><td>人物脸 / 表情怪</td><td>上传真人参考图保持一致；多出几版挑</td></tr>
+    <tr><td>手部 / 手指畸形</td><td>明确「手部自然、手指数量正确、无畸形」；严重就换构图避开手</td></tr>
+    <tr><td>商品被重画 / 变形</td><td>强调「保持产品不变」；或改用「只换背景」思路</td></tr>
+    <tr><td>商品数字 / 规格被改</td><td>限制「不改任何数字信息」；关键数字外部覆盖</td></tr>
+  </table>
+
+  <h3>7.6 哪些在 Lovart 做，哪些导出后做</h3>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--green)"><h4 style="margin-top:4px;color:var(--green)">✅ 留在 Lovart 做</h4><ul style="margin-bottom:0"><li>出整套视觉初稿、氛围图、场景图</li><li>商品换背景、批量风格统一图</li><li>品牌 VI、配色、辅助图形探索</li><li>海报/Banner 的版式与氛围</li></ul></div>
+    <div class="card" style="border-top:3px solid var(--blue)"><h4 style="margin-top:4px;color:var(--blue)">🔧 导出后用 Figma / PS / Canva 做</h4><ul style="margin-bottom:0"><li>精确中文文案、价格、规格</li><li>精细排版、对齐、字距</li><li>多尺寸批量适配（量大时）</li><li>合规信息核对与覆盖</li><li>真实产品图合成与调光</li></ul></div>
+  </div>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 八、检查清单 ============ -->
+  <h2 class="sec" id="s8"><span class="n">八</span>实战检查清单</h2>
+  <p class="lead">设计前、生成中、导出前各过一遍，少返工。</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4 style="margin-top:4px">🟠 设计前（开工前）</h4>
+      <ul class="checklist">
+        <li>列好交付清单：要几张、什么用途</li>
+        <li>确认每张的目标平台与尺寸</li>
+        <li>备好高清产品图（最好白底）</li>
+        <li>备好品牌色值 / logo / 参考图</li>
+        <li>想清楚：给谁看、达到什么效果</li>
+        <li>整理好精确文案（价格/卖点/规格）</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:4px">🟡 生成中（对话时）</h4>
+      <ul class="checklist">
+        <li>用了「角色+商品+人群+场景+风格+构图+尺寸+限制」公式</li>
+        <li>带上了反向约束（不变形/不改 logo/不改数字）</li>
+        <li>让它一次出多版横向挑</li>
+        <li>每轮只改 1-2 个点，说「保持 X 不变只改 Y」</li>
+        <li>文字用占位、要求分图层</li>
+        <li>整组物料强调「风格统一」</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:4px">🟢 导出前（交付前）</h4>
+    <div class="grid2">
+      <ul class="checklist" style="margin:0">
+        <li>产品有没有被悄悄改样 / 变形</li>
+        <li>logo 有没有被改写 / 遮挡</li>
+        <li>有没有乱码、多余 AI 文字</li>
+        <li>手部 / 人物有没有畸形</li>
+      </ul>
+      <ul class="checklist" style="margin:0">
+        <li>精确文案是否已人工替换核对</li>
+        <li>价格/规格/活动规则是否准确合规</li>
+        <li>导出格式对不对（PNG/PSD/SVG）</li>
+        <li>各平台尺寸是否都齐了、主体没被裁</li>
+      </ul>
+    </div>
+  </div>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 九、日本亚马逊 ============ -->
+  <h2 class="sec" id="sjp"><span class="n">九</span>日本亚马逊主图 & A+ 实战</h2>
+  <p class="lead">专为「日亚 3C / 数码配件」卖家写。日亚跟国内电商有两条硬约束，决定了 Lovart 该怎么用：① 主图合规极严、不能有任何文字；② 日文是 AI 出图的重灾区，文案必须全程人工排。先把红线讲清楚，再讲怎么做。</p>
+
+  <div class="callout warn" style="margin-top:0"><b>先记住一句话：</b>在日亚，<b>Lovart 负责「出图、出背景、出氛围」，绝不负责「写日文、保证产品 100% 还原」</b>。所有日文文案、所有合规信息，一律导出后人工处理。</div>
+
+  <!-- 9.1 红线 -->
+  <h3 id="jp1">9.1 先搞懂日亚的「红线」</h3>
+  <p>亚马逊对图片有官方强制规则，主图违规会被降权甚至下架。下面这张对照表请贴在手边：</p>
+  <table>
+    <tr><th>类型</th><th>✅ 必须 / 可以</th><th>🚫 绝对不行</th></tr>
+    <tr><td><b>主图</b><br>(第 1 张)</td><td>纯白底(RGB 255,255,255)、产品占画面 ≥85%、真实产品、JPEG、建议 1600×1600（触发放大镜）</td><td>任何文字 / logo 水印 / 促销角标 / 边框 / 不含的赠品或道具 / 模特(配件类一般不上身)</td></tr>
+    <tr><td><b>附图</b><br>(第 2-7 张)</td><td><b>可以加文字、场景、信息图</b>、尺寸对比、使用场景、卖点标注</td><td>虚假宣传、不实对比、竞品 logo</td></tr>
+    <tr><td><b>A+ 内容</b></td><td>模块化图文、品牌故事、对比表(需<b>品牌备案</b>)</td><td>价格 / 促销话术 / 保证承诺 / 外部网址 / 联系方式</td></tr>
+  </table>
+  <div class="callout info"><b>对你最重要的一条：</b>主图不能有字，所以 <b>Lovart 在主图上的作用只是「把产品摆进纯白棚里、打好光、加自然投影」</b>；而<b>附图</b>才是 Lovart 大显身手的地方——场景图、卖点图、信息图都能做。</div>
+  <div class="src">规格来源：<a href="https://www.sellerlabs.com/blog/amazon-product-image-requirements-2026/" target="_blank">Seller Labs · 图片规格</a>、<a href="https://myamazonguy.com/images/amazon-listing-images-guidelines/" target="_blank">My Amazon Guy · 图片指南</a></div>
+
+  <!-- 9.2 主图 -->
+  <h3 id="jp2">9.2 主图：用 Lovart 的「合规做法」</h3>
+  <div class="card">
+    <p><b>核心思路（很重要）：</b>3C 产品有精确的结构、接口、按键、丝印 logo，<b>最怕 AI「重画」走样</b>（多一个接口、logo 糊掉，都算货不对板）。所以最稳的两种做法：</p>
+    <ol style="margin-bottom:0">
+      <li><b>稳妥派：</b>用 Lovart 出一个干净的<b>纯白棚背景 + 布光参考</b>，把你的<b>真实产品图合成上去</b>，人工调投影。产品本体永远用真实图。</li>
+      <li><b>提效派：</b>上传真实产品图，让 Lovart <b>只清理背景、补光影</b>，并在限制里死死锁住「产品结构/接口/logo 不变」——出图后<b>逐一比对</b>，有任何走样就弃用。</li>
+    </ol>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 日亚 3C 主图（白底布光）</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是亚马逊 3C 产品摄影师。基于我上传的产品图，做一张符合亚马逊主图规范的纯白底产品图。
+产品：[如「氮化镓 65W 快充充电器」]。
+要求：纯白背景(RGB 255,255,255)、产品居中、占画面约 85%、清晰正面透视、柔和棚拍光、轻微真实投影、画面绝对干净。
+严格限制：保持产品的外形、颜色、接口数量与位置、按键、表面 logo 与丝印文字完全不变，不要变形、不要增减任何接口或细节、不要美化结构；
+画面上不要出现任何文字、水印、logo 角标、边框、道具。
+输出：正方形 1:1，分辨率不低于 1600×1600。</pre></div>
+  <div class="prompt"><div class="bar"><span>English Prompt · JP Amazon 3C Main Image</span><button onclick="copyPrompt(this)">复制</button></div><pre>You are an Amazon 3C product photographer. Using my uploaded product image, create a compliant pure-white main image.
+Product: [e.g. 65W GaN fast charger].
+Requirements: pure white background (RGB 255,255,255), product centered, fills ~85% of frame, clear front perspective, soft studio lighting, subtle realistic shadow, absolutely clean frame.
+Strict constraints: keep the product's shape, color, number and position of ports, buttons, surface logo and printed text exactly unchanged; no distortion; do NOT add or remove any port or detail; do NOT beautify the structure.
+No text, watermark, logo badge, border or props anywhere in the image.
+Output: square 1:1, at least 1600×1600.</pre></div>
+  <div class="callout tip"><b>日文提示词要不要？</b>主图不带任何文字，所以<b>没必要用日文写提示词</b>——给 AI 的指令用中/英文即可，它照样出图。日文只在「附图/A+ 排版」时才用到，而且也只是人工打字，不让 AI 写。</div>
+  <p><b>📐 主图规格：</b><span class="pill">纯白底 RGB 255,255,255</span><span class="pill">产品占 ≥85%</span><span class="pill">1:1</span><span class="pill b">≥1600×1600（放大镜）</span><span class="pill">JPEG &lt;10MB</span></p>
+
+  <!-- 9.3 附图 -->
+  <h3 id="jp3">9.3 附图 / 卖点图（Lovart 的主战场）</h3>
+  <div class="card">
+    <p>附图可以加文字、加场景，是 3C 转化的关键。常见 5 类，Lovart 都能出底图/场景，<b>日文文字一律外部排</b>：</p>
+    <ul style="margin-bottom:0">
+      <li><b>功能点图</b>：产品 + 箭头指向各卖点（快充/多口/小巧）</li>
+      <li><b>尺寸对比图</b>：产品 vs 手掌 / 硬币 / 信用卡，体现"便携"</li>
+      <li><b>使用场景图</b>：办公桌、出差行李、车内等真实场景</li>
+      <li><b>参数信息图</b>：接口示意、兼容设备图标墙</li>
+      <li><b>包装/配件全家福</b>：开箱清单</li>
+    </ul>
+  </div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 3C 使用场景附图</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是 3C 电商场景图设计师。把我上传的充电器自然放进真实使用场景，做一张干净高级的附图。
+场景：[如「简洁的居家办公桌，旁边有笔记本电脑、手机正在充电，暖色台灯」]。
+风格：日系简约、留白克制、低饱和、真实摆拍感、浅景深；产品为视觉主体且光影与环境一致。
+保持产品外观、接口、logo 完全不变。
+重要：画面上【不要写任何文字】，预留出干净的空白区域，方便我之后自己排日文卖点文案。
+输出：1:1，1600×1600。</pre></div>
+  <div class="prompt"><div class="bar"><span>中文提示词 · 尺寸对比 / 功能点图（留白排版用）</span><button onclick="copyPrompt(this)">复制</button></div><pre>为这款充电器做一张「卖点信息图」的底图（白色或浅灰背景）。
+布局：产品居中或靠左，四周留出 3-4 块干净的空白标注区（我会自己加日文文字和箭头）。
+风格：科技感、简洁、品牌色点缀、专业。
+严格限制：产品结构/接口/logo 不变；【画面不要出现任何文字】；只给版式与留白，不要 AI 自动写字。
+输出：1:1，1600×1600。</pre></div>
+  <div class="callout warn"><b>为什么反复说「不要写字」？</b>因为只要让 AI 写日文，几乎必出乱码/缺笔画的假名汉字。<b>正确流程：Lovart 出"带留白的底图" → 你在 Figma/PS/Canva 里用真正的日文字体打上文案。</b>这样既好看又零乱码。</div>
+  <p><b>📐 附图规格：</b><span class="pill">建议 1:1，1600×1600</span><span class="pill b">和主图同尺寸，整组统一</span></p>
+
+  <!-- 9.4 A+ -->
+  <h3 id="jp4">9.4 A+ 内容（你目前的前提条件）</h3>
+  <div class="callout warn" style="margin-top:0"><b>⚠️ 实话先说：</b>A+ 内容<b>必须先有亚马逊品牌备案（Brand Registry）</b>才能用，需要你有注册商标。你现在「没有/不确定」，那就<b>暂时做不了 A+</b>。建议：① 先把主图 + 附图做到位（已经能覆盖大部分转化）；② 若打算长期做，尽早注册商标 → 完成品牌备案 → 再开 A+。</div>
+  <div class="card">
+    <p><b>等你备案后，A+ 怎么用 Lovart：</b>A+ 是「模块化图文」，每个模块是一张图配一段文字。Lovart 负责出每个模块的<b>背景图 / 场景图 / 品牌氛围图 / 对比表底图</b>，<b>日文文字仍在 Amazon 后台或 Figma 里排</b>。</p>
+    <ul style="margin-bottom:0">
+      <li><b>品牌故事模块</b>：让 Lovart 出一张有调性的品牌横幅背景</li>
+      <li><b>功能展示模块</b>：场景图 / 产品特写（留白给文案）</li>
+      <li><b>对比表模块</b>：让它出干净的表格底图（型号对比），文字外部填</li>
+    </ul>
+  </div>
+  <p><b>📐 A+ 常用模块尺寸（备案后用）：</b><span class="pill">标准图文 970×600</span><span class="pill">带文字横幅 970×300</span><span class="pill b">≥300dpi，JPEG/PNG</span><span class="pill" style="background:#fff6e6;color:#c9821a">⚠️ 高级A+尺寸更大，以后台为准</span></p>
+  <div class="src">来源：<a href="https://zonhack.com/amazon-a-content-sizes/" target="_blank">A+ Content 尺寸规范</a>、<a href="https://www.ecomcrew.com/amazon-ebc-guide/" target="_blank">A+ / EBC 指南（品牌备案前提）</a></div>
+
+  <!-- 9.5 日文 & 审美 -->
+  <h3 id="jp5">9.5 日文乱码规避 + 日系审美</h3>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--green)">
+      <h4 style="margin-top:4px;color:var(--green)">✅ 彻底规避日文乱码</h4>
+      <ul style="margin-bottom:0">
+        <li>每条提示词都写「<b>画面不要出现任何文字</b>」</li>
+        <li>让 Lovart 只出<b>带留白</b>的底图</li>
+        <li>日文文案在 <b>Figma / PS / Canva</b> 用真日文字体（如 Noto Sans JP）打</li>
+        <li>价格、规格、型号等精确信息，<b>100% 人工录入并核对</b></li>
+      </ul>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <h4 style="margin-top:4px;color:var(--blue)">🎌 贴合日系审美</h4>
+      <ul style="margin-bottom:0">
+        <li><b>留白多、信息清晰</b>，不堆砌</li>
+        <li><b>低饱和、干净、精致克制</b></li>
+        <li>细节真实、可信感强（日本消费者重信任）</li>
+        <li>提示词加：「日系极简、低饱和、留白、真实质感」</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 9.6 案例 -->
+  <h3 id="jp6">9.6 完整案例 · 日亚 3C（氮化镓快充充电器）</h3>
+  <div class="case">
+    <div class="top">
+      <h3>「便携 65W 氮化镓充电器」上架日亚全套视觉</h3>
+      <div class="who">品牌（演示）「PORTLY」· 无品牌备案 → 先做主图+附图 · 卖点：小巧、65W、双口、出差神器</div>
+    </div>
+    <div class="body">
+      <h4>① 主图（合规白底）</h4>
+      <div class="prompt"><div class="bar"><span>主图</span><button onclick="copyPrompt(this)">复制</button></div><pre>你是亚马逊 3C 产品摄影师。基于上传的充电器图，做纯白底主图：
+RGB 255 白底、产品居中占 85%、柔和棚光、轻投影、1:1、1600×1600。
+严格保持外形/双 USB-C 接口/按键/表面 logo 不变，不变形不增减细节；
+画面无任何文字/水印/边框/道具。</pre></div>
+      <h4>② 附图组（带留白，留给日文）</h4>
+      <div class="prompt"><div class="bar"><span>附图 1-4</span><button onclick="copyPrompt(this)">复制</button></div><pre>用统一风格做 4 张附图底图（1:1，1600×1600，留白给我排日文）：
+①尺寸对比：充电器与手掌/信用卡并排，体现小巧；
+②使用场景：出差行李箱旁、酒店桌面同时充手机和笔记本；
+③功能点底图：产品居中，四周留 4 块空白标注区；
+④全家福：充电器 + 收纳袋 + 说明书 平铺俯拍。
+日系极简、低饱和、留白克制、真实质感；产品接口/logo 不变；【画面都不要出现任何文字】。</pre></div>
+      <h4>③ 多尺寸 / 复用</h4>
+      <div class="prompt"><div class="bar"><span>延展</span><button onclick="copyPrompt(this)">复制</button></div><pre>用同一套视觉，把场景图再各出一版竖版（备日后社媒/广告用），
+风格、产品、配色保持一致；产品不变形；不加文字。</pre></div>
+      <p style="margin-bottom:6px"><b>📦 最终交付物清单：</b></p>
+      <ul style="margin-top:0">
+        <li>合规主图 ×1（1:1，1600×1600，纯白底，无字）</li>
+        <li>附图底图 ×4（尺寸对比 / 场景 / 功能点 / 全家福，均留白）</li>
+        <li>→ 导出后在 Figma/PS 用 <b>Noto Sans JP</b> 排日文卖点 + 参数</li>
+        <li>(品牌备案后追加) A+ 模块背景图 ×N（970×600 等）</li>
+        <li>📋 上架前用第八章「导出前清单」逐项核对，重点查：主图无字、产品接口与实物一致、日文无乱码</li>
+      </ul>
+    </div>
+  </div>
+  <a class="back" href="#s0">↑ 回目录</a>
+
+  <!-- ============ 十、附录 ============ -->
+  <h2 class="sec" id="s9"><span class="n">十</span>附录：尺寸表 & 资料来源</h2>
+
+  <h3>9.1 常用电商尺寸速查</h3>
+  <div class="callout info" style="margin-top:0"><b>说明：</b>下表为各平台<b>通用电商尺寸惯例</b>（非 Lovart 专属），平台规则偶有调整，以平台后台为准。在 Lovart 里直接说出比例或像素即可。</div>
+  <table>
+    <tr><th>用途 / 平台</th><th>推荐尺寸（像素）</th><th>比例</th></tr>
+    <tr><td>淘宝 / 天猫 主图</td><td>800×800（可上传更高清）</td><td>1:1</td></tr>
+    <tr><td>京东 主图</td><td>800×800</td><td>1:1</td></tr>
+    <tr><td>亚马逊 主图</td><td>≥1000×1000（支持放大镜）</td><td>1:1</td></tr>
+    <tr><td>详情页长图（宽度）</td><td>750 宽，单屏高 ≤1500</td><td>竖向</td></tr>
+    <tr><td>小红书 图文</td><td>1080×1440</td><td>3:4</td></tr>
+    <tr><td>抖音 / 朋友圈 竖版</td><td>1080×1920</td><td>9:16</td></tr>
+    <tr><td>Instagram 帖子</td><td>1080×1080 或 1080×1350</td><td>1:1 / 4:5</td></tr>
+    <tr><td>App 首页焦点图</td><td>约 750×350</td><td>≈2:1</td></tr>
+    <tr><td>PC 首页横幅 Banner</td><td>1920×640</td><td>3:1</td></tr>
+    <tr><td>大促主 KV（横）</td><td>1920×800 左右</td><td>≈2.4:1</td></tr>
+  </table>
+
+  <h3>9.2 Lovart 关键事实速记（含可信度标注）</h3>
+  <table>
+    <tr><th>项目</th><th>情况</th><th>可信度</th></tr>
+    <tr><td>定位</td><td>全球首个「设计智能体 / AI Design Agent」</td><td><span class="pill g">官方说法</span></td></tr>
+    <tr><td>交互模式</td><td>Convo 对话 / Tap-Tap 提示 / Canvas 画布</td><td><span class="pill g">多源一致</span></td></tr>
+    <tr><td>能力</td><td>VI、海报、商品图、社媒、详情、换背景、图层编辑、视频</td><td><span class="pill g">多源一致</span></td></tr>
+    <tr><td>Skills 功能</td><td>Logo / Product / Social 等技能封装</td><td><span class="pill b">第三方实测</span></td></tr>
+    <tr><td>导出格式</td><td>PNG/JPG/SVG/PSD/PDF/MP4，可接 Figma/PS</td><td><span class="pill b">测评提及</span></td></tr>
+    <tr><td>底层模型</td><td>集成多模型（如 Nano Banana Pro、Kling、Wan、GPT-4o 等）</td><td><span class="pill" style="background:#fff6e6;color:#c9821a">⚠️ 会更新，需实测</span></td></tr>
+    <tr><td>价格</td><td>免费版首月约 500 积分；基础约 $32/月；Pro 年订约 $540（约 10000 积分/月）</td><td><span class="pill" style="background:#fff6e6;color:#c9821a">⚠️ 会变，以官网为准</span></td></tr>
+    <tr><td>水印 / 单次积分消耗</td><td>未明确</td><td><span class="pill" style="background:#fff6e6;color:#c9821a">⚠️ 需实测验证</span></td></tr>
+  </table>
+
+  <h3>9.3 资料来源（均可点击核对）</h3>
+  <div class="card">
+    <p class="src" style="margin-top:0"><b>官方：</b></p>
+    <ul class="src">
+      <li><a href="https://www.lovart.ai/zh/docs/getting-started/how-lovart-works" target="_blank">Lovart 官方文档 · How Lovart works</a>（中文文档，直接抓取受限，结论以多源交叉验证为准）</li>
+      <li><a href="https://www.lovart.ai/blog/best-logo-design-platform" target="_blank">Lovart 官方博客 · Canva vs Figma vs Lovart</a></li>
+      <li><a href="https://www.lovart.ai/features/ai-design-agent" target="_blank">Lovart 官方 · AI Design Agent 功能页</a></li>
+    </ul>
+    <p class="src"><b>第三方教程 / 测评 / 案例：</b></p>
+    <ul class="src">
+      <li><a href="https://blog.csdn.net/weixin_49199926/article/details/156143333" target="_blank">CSDN · 用 Lovart 做品牌全案设计（5 场景教程）</a></li>
+      <li><a href="https://zhuanlan.zhihu.com/p/1909534815574814791" target="_blank">知乎 · Lovart 设计 Agent 从入门到精通的提示词实战指南</a></li>
+      <li><a href="https://zhuanlan.zhihu.com/p/1908500493522671167" target="_blank">知乎 · 一句话搞定全套设计？Lovart 全自动设计实测</a></li>
+      <li><a href="https://zhuanlan.zhihu.com/p/2001655268048668384" target="_blank">知乎 · Lovart 国内版平替星流 Agent 实测</a></li>
+      <li><a href="https://www.10100.com/article/96209026" target="_blank">大数跨境 · Lovart Skills 与 50 组精品提示词</a></li>
+      <li><a href="https://www.woshipm.com/ai/6217253.html" target="_blank">人人都是产品经理 · 拆解 Lovart 系统提示词</a></li>
+      <li><a href="https://www.ai138.com/ai-guide/lovart-ai" target="_blank">AI138 · Lovart 全面解析（VI/故事板/海报）</a></li>
+      <li><a href="https://skywork.ai/blog/lovart-ai-review-2025-design-agent/" target="_blank">Skywork · Lovart AI Review 2025（导出/优缺点）</a></li>
+      <li><a href="https://buzz.uni.edu/w-ai-drafts/canvas-ai-vs-lovart-vs-midjourney-comparison/" target="_blank">对比 · Canvas AI vs Lovart vs Midjourney</a></li>
+      <li><a href="https://www.v2ex.com/t/1190066" target="_blank">V2EX · Lovart Pro 年订价格讨论</a> / <a href="https://blog.csdn.net/2509_90711057/article/details/148291389" target="_blank">CSDN · Lovart 收费与订阅教程</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    <p><b>免责声明：</b>本教程为学习整理，案例品牌均为演示虚构。Lovart 功能、模型、价格更新很快，文中标注「⚠️ 需实测验证」之处请以你登录后实际看到的为准。涉及商品合规、价格、规格等信息，导出后务必人工核对。</p>
+    <p>整理日期：2026 年 6 月 · 面向产品经理 / 电商运营 / 设计师助理 / 新手创业者 · 建议用浏览器打开，点提示词右上角「复制」即可取用。</p>
+  </footer>
+</main>
+</div>
+
+<script>
+function copyPrompt(btn){
+  var pre=btn.closest('.prompt').querySelector('pre');
+  var txt=pre.innerText;
+  navigator.clipboard.writeText(txt).then(function(){
+    var old=btn.innerText;btn.innerText='✓ 已复制';btn.classList.add('done');
+    setTimeout(function(){btn.innerText=old;btn.classList.remove('done');},1600);
+  });
+}
+</script>
 </body>
 </html>
